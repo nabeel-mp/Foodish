@@ -1,0 +1,13 @@
+/* .header{
+    position: relative;
+    inset: calc(var(--spacing)*0);
+    background-color: color-mix(in oklab, var(--color-black)20%,transparent);
+    z-index: 0;
+    background: url(https://media.istockphoto.com/id/1097744990/photo/italian-pasta-spaghetti-with-meatballs-and-parmesan-cheese-in-black-plate-on-dark-rustic-wood.jpg?s=612x612&w=0&k=20&c=mokZoAi7dtawXKbkZ6qrDR-JW7-SH2si3PPycI3Z0Pg=) no-repeat;
+background-size: cover;
+height: 40vw;
+border-radius: 20px;
+margin: 30px auto;
+
+
+} */
