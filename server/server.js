@@ -12,7 +12,7 @@ const app = express();
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(cors({
-    origin: "http://localhost:5174", // Allow your Vite Frontend
+    origin: "http://localhost:5173", // Allow your Vite Frontend
     credentials: true
 }));
 
@@ -20,6 +20,8 @@ app.use(cors({
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/menuItems', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/api/wishlist', require('./routes/wishlistRoutes'));
 
 // Root Route
 app.get('/', (req, res) => {

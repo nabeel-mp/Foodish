@@ -32,7 +32,14 @@ const MyOrder = () => {
     fetchOrders();
   }, [user, navigate]);
 
-  if (!user) return null;
+  if (!user) {
+     return (
+         <div className="my-orders-empty">
+             <h2>Please log in to view orders</h2>
+             <button onClick={() => navigate("/login")}>Login</button>
+         </div>
+     )
+  }
 
   return (
       
