@@ -1,0 +1,1120 @@
+{
+  "menuItems": [
+    {
+      "id": "4",
+      "img": "https://i.ytimg.com/vi/hFuG4wlztMo/maxresdefault.jpg",
+      "title": "Spicy Fried Chicken Biryani",
+      "price": 215,
+      "desc": "Crispy fried chicken paired with spicy biryani rice for a bold taste experience.",
+      "category": "Biriyani"
+    },
+    {
+      "id": "5",
+      "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+      "title": "Chocolate Lava Cake",
+      "category": "Dessert",
+      "price": 120,
+      "desc": "Warm chocolate cake with a gooey molten center served with ice cream."
+    },
+    {
+      "id": "6",
+      "img": "https://sundaytable.co/wp-content/uploads/2023/08/the-best-no-bake-strawberry-cheesecake-1.jpg",
+      "title": "Strawberry Cheesecake",
+      "category": "Dessert",
+      "price": 148,
+      "desc": "Creamy cheesecake topped with fresh strawberry compote."
+    },
+    {
+      "id": "7",
+      "img": "https://aartimadan.com/wp-content/uploads/2020/11/milk-powder-gulab-jamuns.jpg",
+      "title": "Gulab Jamun",
+      "category": "Dessert",
+      "price": 80,
+      "desc": "Soft deep-fried milk balls soaked in rose-flavored sugar syrup."
+    },
+    {
+      "id": "8",
+      "img": "https://threesnackateers.com/wp-content/uploads/2022/06/Brownie-Sundae-Recipe-720x720.jpg",
+      "title": "Brownie Sundae",
+      "category": "Dessert",
+      "price": 140,
+      "desc": "Fudgy brownie served with vanilla ice cream, nuts, and chocolate sauce."
+    },
+    {
+      "id": "9",
+      "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE9YuLr1ZjEeu7cfXpFYlVSp93Tz7RnCyChA&s",
+      "title": "Mango Mousse",
+      "category": "Dessert",
+      "price": 100,
+      "desc": "Light and airy mango-flavored mousse with whipped cream topping."
+    },
+    {
+      "id": "10",
+      "img": "https://vegecravings.com/wp-content/uploads/2017/03/veg-hakka-noodles-recipe-with-step-by-step-instructions.jpg",
+      "title": "Veg Hakka Noodles",
+      "category": "Noodles",
+      "price": 140,
+      "desc": "Stir-fried noodles with mixed vegetables in Indo-Chinese flavors."
+    },
+    {
+      "id": "11",
+      "img": "https://theindianclaypot.com/content/images/wp-content/uploads/2018/09/schezwan-chicken-noodles.jpg",
+      "title": "Chicken Schezwan Noodles",
+      "category": "Noodles",
+      "price": 160,
+      "desc": "Spicy noodles tossed with shredded chicken and Schezwan sauce."
+    },
+    {
+      "id": "12",
+      "img": "https://www.sharmispassions.com/wp-content/uploads/2012/01/EggNoodles3-500x500.jpg",
+      "title": "Egg Noodles",
+      "category": "Noodles",
+      "price": 140,
+      "desc": "Egg stir-fried noodles with spring onions and soy flavor."
+    },
+    {
+      "id": "13",
+      "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaVtRDttE-YYe3YQLvHCePs512wvK3LdVjg&s",
+      "title": "Paneer Chilli Garlic Noodles",
+      "category": "Noodles",
+      "price": 150,
+      "desc": "Garlicky noodles tossed with paneer cubes and chili sauce."
+    },
+    {
+      "id": "14",
+      "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnLsIBoCf3Z4eu-mTtWVqjXgdG81FZHfOm8g&s",
+      "title": "Seafood Noodles",
+      "category": "Noodles",
+      "price": 180,
+      "desc": "Flavorful noodles mixed with prawns, squid, and vegetables."
+    },
+    {
+      "id": "15",
+      "img": "https://cdn.uengage.io/uploads/18085/image-312974-1717587897.jpeg",
+      "title": "Classic Chicken Burger",
+      "category": "Burger",
+      "price": 160,
+      "desc": "Crispy chicken patty with lettuce, mayo, and cheese in a soft bun."
+    },
+    {
+      "id": "16",
+      "img": "https://dukaan.b-cdn.net/1000x1000/webp/590610/5868aea2-f274-4eab-822f-27da13d4a499.png",
+      "title": "Veggie Delight Burger",
+      "category": "Burger",
+      "price": 130,
+      "desc": "Grilled veggie patty with cheese, tomatoes, and lettuce."
+    },
+    {
+      "id": "17",
+      "img": "https://www.kitchensanctuary.com/wp-content/uploads/2021/05/Double-Cheeseburger-tall-FS-38.webp",
+      "title": "Double Cheese Beef Burger",
+      "category": "Burger",
+      "price": 200,
+      "desc": "Juicy beef patties with double cheese and smoky barbecue sauce."
+    },
+    {
+      "id": "18",
+      "img": "https://cdn.uengage.io/uploads/18085/image-465619-1717587021.jpeg",
+      "title": "Spicy Paneer Burger",
+      "category": "Burger",
+      "price": 150,
+      "desc": "Paneer patty with chili mayo, onions, and crunchy slaw."
+    },
+    {
+      "id": "19",
+      "img": "https://theheirloompantry.co/wp-content/uploads/2022/07/fried-egg-burger-the-heirloom-pantry-2.jpg",
+      "title": "Egg and Cheese Burger",
+      "category": "Burger",
+      "price": 140,
+      "desc": "Fried egg, cheddar cheese, and tomato sauce in a toasted bun."
+    },
+    {
+      "id": "20",
+      "img": "https://www.recipetineats.com/tachyon/2018/09/Chocolate-Mousse_9.jpg?resize=500%2C500",
+      "title": "Chocolate Mousse",
+      "category": "Dessert",
+      "price": 130,
+      "desc": "Silky smooth chocolate mousse topped with whipped cream."
+    },
+    {
+      "id": "21",
+      "img": "https://classicradheysweets.in/cdn/shop/products/RASMALAI.png?v=1638878994",
+      "title": "Rasmalai",
+      "category": "Dessert",
+      "price": 90,
+      "desc": "Soft cottage cheese discs soaked in saffron milk."
+    },
+    {
+      "id": "22",
+      "img": "https://images.getrecipekit.com/20221203000052-how-to-make-singapore-noodles-recipe.png?aspect_ratio=1:1&quality=90&",
+      "title": "Singapore Noodles",
+      "category": "Noodles",
+      "price": 170,
+      "desc": "Thin rice noodles with curry flavor, shrimp, and bell peppers."
+    },
+    {
+      "id": "23",
+      "img": "https://thescranline.com/wp-content/uploads/2022/02/crispy-chicken-burger-WEB-01.jpg",
+      "title": "Cheesy Chicken Pop Burger",
+      "category": "Burger",
+      "price": 170,
+      "desc": "Mini chicken pops inside a burger with cheesy sauce and jalapeños."
+    },
+    {
+      "id": "24",
+      "img": "https://www.allrecipes.com/thmb/T_c_krRIbsX-SoCW7Mll7QTut80=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/AllRecipes_Veggie_Burger_0001-2000-1b394fe9d3aa4ceb98281dfc09b8146a.jpg",
+      "title": "Grilled Mushroom Burger",
+      "category": "Burger",
+      "price": 155,
+      "desc": "Grilled mushrooms, cheese, and garlic aioli in a whole wheat bun."
+    },
+    {
+      "id": "25",
+      "img": "https://www.anediblemosaic.com/wp-content/uploads//2021/09/mango-lassi-featured-image.jpg",
+      "title": "Mango Lassi",
+      "category": "Drinks",
+      "price": 90,
+      "desc": "Creamy yogurt-based mango smoothie flavored with cardamom."
+    },
+    {
+      "id": "26",
+      "img": "https://lemoninginger.com/wp-content/uploads/2018/04/1804_Beverage_IcedCoffee-004.jpg",
+      "title": "Cold Coffee Frappe",
+      "category": "Drinks",
+      "price": 110,
+      "desc": "Iced coffee blended with milk and topped with chocolate drizzle."
+    },
+    {
+      "id": "27",
+      "img": "https://images.squarespace-cdn.com/content/v1/5bcccf8b9b7d15579477a125/90b3a927-bad4-4c64-bd2f-2f62ea5424a2/Virgin+Mojito.jpg",
+      "title": "Virgin Mojito",
+      "category": "Drinks",
+      "price": 100,
+      "desc": "Refreshing mocktail with mint, lemon, soda, and crushed ice."
+    },
+    {
+      "id": "28",
+      "img": "https://foodsharingvegan.com/wp-content/uploads/2022/06/Watermelon-Lime-Juice-Plant-Based-on-a-Budget-1-2.jpg",
+      "title": "Watermelon Juice",
+      "category": "Drinks",
+      "price": 80,
+      "desc": "Freshly blended watermelon juice served chilled."
+    },
+    {
+      "id": "29",
+      "img": "https://simplyhomecooked.com/wp-content/uploads/2023/04/Margherita-Pizza-3.jpg",
+      "title": "Margherita Pizza",
+      "category": "Pizza",
+      "price": 180,
+      "desc": "Classic tomato, mozzarella, and basil on a crispy thin crust."
+    },
+    {
+      "id": "30",
+      "img": "https://myfancypantry.com/wp-content/uploads/2012/04/chicken-tikka-pizza-04406.jpg",
+      "title": "Spicy Chicken Tikka Masala Pizza",
+      "category": "Pizza",
+      "price": 220,
+      "desc": "Tandoori chicken chunks, onions, and bell peppers on cheesy crust."
+    },
+    {
+      "id": "31",
+      "img": "https://www.cookclickndevour.com/wp-content/uploads/2019/09/paneer-pizza-recipe-500x500.jpg",
+      "title": "Paneer Delight Pizza",
+      "category": "Pizza",
+      "price": 200,
+      "desc": "Cubes of paneer, onions, and capsicum with spicy Indian seasoning."
+    },
+    {
+      "id": "d39c",
+      "title": "Authentic Chicken Biriyani",
+      "category": "Biriyani",
+      "price": 130,
+      "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqz7miyCLLcl4e0aXlwpJiu4M2AA-3YIfSqlqB-M4mTFmKE5VS9WMst6PU980Kk03t8cX4",
+      "desc": "Authentic chicken biryani is a fragrant, layered rice dish with succulent pieces of chicken, cooked in a pot with aromatic spices and herbs"
+    },
+    {
+      "id": "c949",
+      "title": "Alfahm Mandhi",
+      "category": "Mandhi",
+      "price": 180,
+      "img": "https://www.shutterstock.com/image-photo/arabic-alfaham-mayonnaise-tomato-sauce-260nw-2159843959.jpg",
+      "desc": "Al Faham Mandi is a popular Arabian dish featuring succulent, charcoal-grilled chicken (Al Faham) served over fragrant Mandi rice. "
+    }
+  ],
+  "userDetails": [
+    {
+      "id": "3436",
+      "name": "Adhil",
+      "email": "adhil@gmail.com",
+      "password": "123adil",
+      "role": "user",
+      "status": "active"
+    },
+    {
+      "id": "1e43",
+      "name": "Basith",
+      "email": "basith@gmail.com",
+      "password": "123basith",
+      "role": "user",
+      "status": "active"
+    },
+    {
+      "id": "5a2e",
+      "name": "naja",
+      "email": "naja123@gmail.com",
+      "password": "naja900",
+      "role": "user",
+      "status": "active"
+    },
+    {
+      "id": "8b99",
+      "name": "Nabeel",
+      "email": "mr.nabeel@gmail.com",
+      "password": "Sanu@finu",
+      "role": "admin",
+      "status": "active"
+    }
+  ],
+  "carts": [
+    {
+      "id": "062e",
+      "userId": "fc9f",
+      "menuId": "3",
+      "title": "Chicken Dum Biryani",
+      "price": 200,
+      "img": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoFARcCqxGEQAv-lxRL9_6QnaUOY-zIUAvCOzkUoKbNk6URYGexQZEUYoWsPfKOQ_Yl8hWGAkMK2WDtXlW2YjFAdbvYzLa0zA3p8k7MytP_d4YfQiB-gx1lKKMMwUMyhm3GdkAOBt2IDNi/s1600/Chicken+Biryani+4.jpg",
+      "quantity": 1
+    },
+    {
+      "id": "78a6",
+      "userId": "fc9f",
+      "menuId": "2",
+      "title": "Mutton Biriyani",
+      "price": 240,
+      "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+      "quantity": 2
+    },
+    {
+      "id": "7d16",
+      "userId": "fc9f",
+      "menuId": "062e",
+      "title": "Chicken Dum Biryani",
+      "price": 200,
+      "img": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhoFARcCqxGEQAv-lxRL9_6QnaUOY-zIUAvCOzkUoKbNk6URYGexQZEUYoWsPfKOQ_Yl8hWGAkMK2WDtXlW2YjFAdbvYzLa0zA3p8k7MytP_d4YfQiB-gx1lKKMMwUMyhm3GdkAOBt2IDNi/s1600/Chicken+Biryani+4.jpg",
+      "quantity": 1
+    },
+    {
+      "id": "51d7",
+      "userId": "fc9f",
+      "menuId": "1",
+      "title": "Authentic Chicken Biryani",
+      "price": 140,
+      "img": "https://pipingpotcurry.com/wp-content/uploads/2024/04/Chicken-Biryani-Piping-Pot-Curry.jpg",
+      "quantity": 1
+    },
+    {
+      "id": "8264",
+      "userId": "fc9f",
+      "menuId": "5",
+      "title": "Chocolate Lava Cake",
+      "price": 120,
+      "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+      "quantity": 1
+    }
+  ],
+  "orders": [
+    {
+      "id": "1753982173557",
+      "userId": "3436",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 40,
+      "total": 292,
+      "address": "malappuram , manjeri, pulpatta, thottekkad",
+      "name": "Nabeel",
+      "phone": 7736110727,
+      "paymentMethod": "UPI",
+      "date": "7/31/2025, 10:46:13 PM",
+      "status": "Order Placed"
+    },
+    {
+      "id": "1754128022746",
+      "userId": "fc9f",
+      "items": [],
+      "subtotal": 180,
+      "tax": 9,
+      "deliverycharge": 40,
+      "total": 229,
+      "date": "8/2/2025, 3:17:02 PM",
+      "status": "Order Placed"
+    },
+    {
+      "id": "1754128271438",
+      "userId": "fc9f",
+      "items": [],
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 40,
+      "total": 292,
+      "date": "8/2/2025, 3:21:11 PM",
+      "status": "Order Placed"
+    },
+    {
+      "id": "1754128291876",
+      "userId": "fc9f",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 2
+        }
+      ],
+      "subtotal": 480,
+      "tax": 24,
+      "deliverycharge": 40,
+      "total": 544,
+      "date": "8/2/2025, 3:21:31 PM",
+      "status": "Order Placed"
+    },
+    {
+      "id": "1754128841652",
+      "userId": "fc9f",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 2
+        }
+      ],
+      "subtotal": 200,
+      "tax": 10,
+      "deliverycharge": 40,
+      "total": 250,
+      "date": "8/2/2025, 3:30:41 PM",
+      "status": "Order Placed"
+    },
+    {
+      "id": "1754128877809",
+      "userId": "fc9f",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 2
+        }
+      ],
+      "subtotal": 150,
+      "tax": 8,
+      "deliverycharge": 40,
+      "total": 198,
+      "date": "8/2/2025, 3:31:17 PM",
+      "status": "Order Placed"
+    },
+    {
+      "id": "1754128911865",
+      "userId": "fc9f",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 2
+        }
+      ],
+      "subtotal": 140,
+      "tax": 7,
+      "deliverycharge": 40,
+      "total": 187,
+      "date": "8/2/2025, 3:31:51 PM",
+      "status": "Order Placed"
+    },
+    {
+      "id": "1754128982538",
+      "userId": "fc9f",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 2
+        }
+      ],
+      "subtotal": 210,
+      "tax": 11,
+      "deliverycharge": 40,
+      "total": 261,
+      "date": "8/2/2025, 3:33:02 PM",
+      "status": "Delivered"
+    },
+    {
+      "id": "e7c8",
+      "userId": "fc9f",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 2
+        }
+      ],
+      "total": 534,
+      "address": "manjeri town",
+      "paymentMethod": "UPI",
+      "status": "Pending",
+      "date": "8/2/2025, 3:39:25 PM"
+    },
+    {
+      "id": "20f0",
+      "userId": "fc9f",
+      "items": [],
+      "total": 30,
+      "address": "puruthanan kodan house thottekad",
+      "paymentMethod": "UPI",
+      "status": "Pending",
+      "date": "8/2/2025, 3:43:46 PM"
+    },
+    {
+      "id": "c9ca",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "manjeri Town",
+      "paymentMethod": "UPI",
+      "status": "Pending",
+      "date": "8/2/2025, 4:37:38 PM"
+    },
+    {
+      "id": "3998",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "6",
+          "img": "https://sundaytable.co/wp-content/uploads/2023/08/the-best-no-bake-strawberry-cheesecake-1.jpg",
+          "title": "Strawberry Cheesecake",
+          "category": "Dessert",
+          "price": 150,
+          "desc": "Creamy cheesecake topped with fresh strawberry compote.",
+          "quantity": 1
+        }
+      ],
+      "total": 188,
+      "address": "manjeri Town",
+      "subtotal": 150,
+      "tax": 8,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Pending",
+      "date": "8/2/2025, 5:16:35 PM"
+    },
+    {
+      "id": "c7ff",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "manjeri Town",
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "ATM",
+      "status": "Order Placed",
+      "date": "8/2/2025, 5:19:01 PM"
+    },
+    {
+      "id": "346b",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "1",
+          "img": "https://pipingpotcurry.com/wp-content/uploads/2024/04/Chicken-Biryani-Piping-Pot-Curry.jpg",
+          "title": "Authentic Chicken Biryani",
+          "price": 140,
+          "desc": "Traditional chicken biryani made with flavorful spices and long-grain basmati rice.",
+          "category": "Biriyani",
+          "quantity": 6
+        },
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 13
+        }
+      ],
+      "total": 4188,
+      "address": "bridgeon thurakkal\n",
+      "subtotal": 3960,
+      "tax": 198,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/2/2025, 5:22:55 PM"
+    },
+    {
+      "id": "4bc5",
+      "userId": "a3bc",
+      "items": [
+        {
+          "id": "18",
+          "img": "https://cdn.uengage.io/uploads/18085/image-465619-1717587021.jpeg",
+          "title": "Spicy Paneer Burger",
+          "category": "Burger",
+          "price": 150,
+          "desc": "Paneer patty with chili mayo, onions, and crunchy slaw.",
+          "quantity": 1
+        }
+      ],
+      "total": 188,
+      "address": "pulpatta",
+      "subtotal": 150,
+      "tax": 8,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/3/2025, 10:01:58 AM"
+    },
+    {
+      "id": "7a30",
+      "userId": "a3bc",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "manjeri, pulpatta, palakkathod",
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/3/2025, 11:04:52 AM"
+    },
+    {
+      "id": "6f6d",
+      "userId": "a3bc",
+      "items": [
+        {
+          "id": "32",
+          "img": "https://reddotgreendot.com/cdn/shop/products/ChickenPepperoni.png?v=1678783253",
+          "title": "Pepperoni Feast Pizza",
+          "category": "Pizza",
+          "price": 240,
+          "desc": "Loaded with spicy pepperoni slices and extra cheese.",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "manjeri, pulpatta palakkathod\n",
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/3/2025, 11:09:28 AM"
+    },
+    {
+      "id": "c505",
+      "userId": "a3bc",
+      "items": [
+        {
+          "id": "32",
+          "img": "https://reddotgreendot.com/cdn/shop/products/ChickenPepperoni.png?v=1678783253",
+          "title": "Pepperoni Feast Pizza",
+          "category": "Pizza",
+          "price": 240,
+          "desc": "Loaded with spicy pepperoni slices and extra cheese.",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "manjeri, pulpatta , palakkathod",
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/3/2025, 11:10:13 AM"
+    },
+    {
+      "id": "f9ce",
+      "userId": "a3bc",
+      "items": [
+        {
+          "id": "32",
+          "img": "https://reddotgreendot.com/cdn/shop/products/ChickenPepperoni.png?v=1678783253",
+          "title": "Pepperoni Feast Pizza",
+          "category": "Pizza",
+          "price": 240,
+          "desc": "Loaded with spicy pepperoni slices and extra cheese.",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "manjeri,pulpatta, palakkathod",
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/3/2025, 11:17:22 AM"
+    },
+    {
+      "id": "c992",
+      "userId": "a3bc",
+      "items": [
+        {
+          "id": "5",
+          "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+          "title": "Chocolate Lava Cake",
+          "category": "Dessert",
+          "price": 120,
+          "desc": "Warm chocolate cake with a gooey molten center served with ice cream.",
+          "quantity": 1
+        }
+      ],
+      "total": 156,
+      "address": "manjeri, pulpatta ,palakkathod",
+      "subtotal": 120,
+      "tax": 6,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/3/2025, 11:19:27 AM"
+    },
+    {
+      "id": "215d",
+      "userId": "d940",
+      "items": [
+        {
+          "id": "1",
+          "img": "https://pipingpotcurry.com/wp-content/uploads/2024/04/Chicken-Biryani-Piping-Pot-Curry.jpg",
+          "title": "Authentic Chicken Biryani",
+          "price": 140,
+          "desc": "Traditional chicken biryani made with flavorful spices and long-grain basmati rice.",
+          "category": "Biriyani",
+          "quantity": 3
+        },
+        {
+          "id": "5",
+          "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+          "title": "Chocolate Lava Cake",
+          "category": "Dessert",
+          "price": 120,
+          "desc": "Warm chocolate cake with a gooey molten center served with ice cream.",
+          "quantity": 2
+        }
+      ],
+      "total": 723,
+      "address": "manjeri, pulpatta ,palakkathod",
+      "subtotal": 660,
+      "tax": 33,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/3/2025, 8:46:29 PM"
+    },
+    {
+      "id": "4101",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "fvnifrbvuivbrbre",
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/5/2025, 11:17:45 AM"
+    },
+    {
+      "id": "201c",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "11",
+          "img": "https://theindianclaypot.com/content/images/wp-content/uploads/2018/09/schezwan-chicken-noodles.jpg",
+          "title": "Chicken Schezwan Noodles",
+          "category": "Noodles",
+          "price": 160,
+          "desc": "Spicy noodles tossed with shredded chicken and Schezwan sauce.",
+          "quantity": 5
+        }
+      ],
+      "total": 870,
+      "address": "fvnifrbvuivbrbre",
+      "subtotal": 800,
+      "tax": 40,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/5/2025, 11:18:00 AM"
+    },
+    {
+      "id": "c14a",
+      "userId": "2a82",
+      "items": [
+        {
+          "id": "1",
+          "img": "https://pipingpotcurry.com/wp-content/uploads/2024/04/Chicken-Biryani-Piping-Pot-Curry.jpg",
+          "title": "Authentic Chicken Biryani",
+          "price": 140,
+          "desc": "Traditional chicken biryani made with flavorful spices and long-grain basmati rice.",
+          "category": "Biriyani",
+          "quantity": 5
+        },
+        {
+          "id": "13",
+          "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaVtRDttE-YYe3YQLvHCePs512wvK3LdVjg&s",
+          "title": "Paneer Chilli Garlic Noodles",
+          "category": "Noodles",
+          "price": 150,
+          "desc": "Garlicky noodles tossed with paneer cubes and chili sauce.",
+          "quantity": 2
+        },
+        {
+          "id": "19",
+          "img": "https://theheirloompantry.co/wp-content/uploads/2022/07/fried-egg-burger-the-heirloom-pantry-2.jpg",
+          "title": "Egg and Cheese Burger",
+          "category": "Burger",
+          "price": 140,
+          "desc": "Fried egg, cheddar cheese, and tomato sauce in a toasted bun.",
+          "quantity": 1
+        }
+      ],
+      "total": 1227,
+      "address": "fvnifrbvuivbrbre",
+      "subtotal": 1140,
+      "tax": 57,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/5/2025, 4:58:25 PM"
+    },
+    {
+      "id": "7143",
+      "userId": "2a82",
+      "items": [
+        {
+          "id": "2",
+          "img": "https://png.pngtree.com/thumb_back/fh260/background/20240328/pngtree-mutton-biryani-meal-in-a-plate-on-table-image_15645442.jpg",
+          "title": "Mutton Biriyani",
+          "price": 240,
+          "desc": "Fragrant pulav rice mixed with tender chicken, perfect for a light meal.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "total": 282,
+      "address": "fvnifrbvuivbrbre",
+      "subtotal": 240,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/5/2025, 4:59:18 PM"
+    },
+    {
+      "id": "240a",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "5",
+          "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+          "title": "Chocolate Lava Cake",
+          "category": "Dessert",
+          "price": 121,
+          "desc": "Warm chocolate cake with a gooey molten center served with ice cream.",
+          "quantity": 5
+        }
+      ],
+      "total": 665,
+      "address": "kavanur, palakkaparamb",
+      "subtotal": 605,
+      "tax": 30,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/6/2025, 3:17:42 PM"
+    },
+    {
+      "id": "b31c",
+      "userId": "8785",
+      "items": [
+        {
+          "id": "5",
+          "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+          "title": "Chocolate Lava Cake",
+          "category": "Dessert",
+          "price": 121,
+          "desc": "Warm chocolate cake with a gooey molten center served with ice cream.",
+          "quantity": 2
+        }
+      ],
+      "total": 284,
+      "address": "Pulpatta Palakkathod",
+      "subtotal": 242,
+      "tax": 12,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/6/2025, 4:31:07 PM"
+    },
+    {
+      "id": "7cd6",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "5",
+          "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+          "title": "Chocolate Lava Cake",
+          "category": "Dessert",
+          "price": 120,
+          "desc": "Warm chocolate cake with a gooey molten center served with ice cream.",
+          "quantity": 4
+        },
+        {
+          "id": "6",
+          "img": "https://sundaytable.co/wp-content/uploads/2023/08/the-best-no-bake-strawberry-cheesecake-1.jpg",
+          "title": "Strawberry Cheesecake",
+          "category": "Dessert",
+          "price": 148,
+          "desc": "Creamy cheesecake topped with fresh strawberry compote.",
+          "quantity": 2
+        }
+      ],
+      "total": 845,
+      "address": "hrugnvnfjhvfievnurjvnr",
+      "subtotal": 776,
+      "tax": 39,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/20/2025, 2:55:26 PM"
+    },
+    {
+      "id": "202e",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "5",
+          "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+          "title": "Chocolate Lava Cake",
+          "category": "Dessert",
+          "price": 120,
+          "desc": "Warm chocolate cake with a gooey molten center served with ice cream.",
+          "quantity": 1
+        }
+      ],
+      "total": 156,
+      "address": "tvyedgbudhnbjbnbriger84738232",
+      "subtotal": 120,
+      "tax": 6,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/30/2025, 9:57:30 PM"
+    },
+    {
+      "id": "f8b8",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "5",
+          "img": "https://www.melskitchencafe.com/wp-content/uploads/2023/01/updated-lava-cakes7-500x500.jpg",
+          "title": "Chocolate Lava Cake",
+          "category": "Dessert",
+          "price": 120,
+          "desc": "Warm chocolate cake with a gooey molten center served with ice cream.",
+          "quantity": 1
+        }
+      ],
+      "total": 156,
+      "address": "tvyedgbudhnbjbnbriger8fubdv;knvf",
+      "subtotal": 120,
+      "tax": 6,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/30/2025, 10:03:49 PM"
+    },
+    {
+      "id": "9efe",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "6",
+          "img": "https://sundaytable.co/wp-content/uploads/2023/08/the-best-no-bake-strawberry-cheesecake-1.jpg",
+          "title": "Strawberry Cheesecake",
+          "category": "Dessert",
+          "price": 148,
+          "desc": "Creamy cheesecake topped with fresh strawberry compote.",
+          "quantity": 1
+        }
+      ],
+      "name": "nabeel",
+      "phone": "7736110727",
+      "total": 185,
+      "address": "tvyedgbudhnbjbnbriger8fubdv;knvf",
+      "subtotal": 148,
+      "tax": 7,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "8/30/2025, 10:07:24 PM"
+    },
+    {
+      "id": "99e7",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "4",
+          "img": "https://i.ytimg.com/vi/hFuG4wlztMo/maxresdefault.jpg",
+          "title": "Spicy Fried Chicken Biryani",
+          "price": 215,
+          "desc": "Crispy fried chicken paired with spicy biryani rice for a bold taste experience.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "name": "naja",
+      "phone": "7736110727",
+      "total": 256,
+      "address": "tvyedgbudhnbjbnbriger8fubdv;knvf",
+      "subtotal": 215,
+      "tax": 11,
+      "deliverycharge": 30,
+      "paymentMethod": "COD",
+      "status": "Order Placed",
+      "date": "9/3/2025, 3:19:09 PM"
+    },
+    {
+      "id": "0cc4",
+      "userId": "5a2e",
+      "items": [
+        {
+          "id": "7",
+          "img": "https://aartimadan.com/wp-content/uploads/2020/11/milk-powder-gulab-jamuns.jpg",
+          "title": "Gulab Jamun",
+          "category": "Dessert",
+          "price": 80,
+          "desc": "Soft deep-fried milk balls soaked in rose-flavored sugar syrup.",
+          "quantity": 2
+        }
+      ],
+      "name": "naja",
+      "phone": "7736110727",
+      "total": 198,
+      "address": "tvyedgbudhnbjbnbriger8fubdv;knvf",
+      "subtotal": 160,
+      "tax": 8,
+      "deliverycharge": 30,
+      "paymentMethod": "COD",
+      "status": "Order Placed",
+      "date": "9/3/2025, 3:27:42 PM"
+    },
+    {
+      "id": "efc4",
+      "userId": "1e43",
+      "items": [
+        {
+          "id": "4",
+          "img": "https://i.ytimg.com/vi/hFuG4wlztMo/maxresdefault.jpg",
+          "title": "Spicy Fried Chicken Biryani",
+          "price": 215,
+          "desc": "Crispy fried chicken paired with spicy biryani rice for a bold taste experience.",
+          "category": "Biriyani",
+          "quantity": 1
+        }
+      ],
+      "name": "Basith",
+      "phone": "7907851173",
+      "total": 256,
+      "address": "tvyedgbudhnbjbnbriger8fubdv;knvf",
+      "subtotal": 215,
+      "tax": 11,
+      "deliverycharge": 30,
+      "paymentMethod": "UPI",
+      "status": "Order Placed",
+      "date": "9/3/2025, 3:29:27 PM"
+    }
+  ],
+  "wishlist": [
+    {
+      "id": "1",
+      "title": "Malabar Chicken Biriyani",
+      "price": 180,
+      "img": "https://example.com/biryani.jpg",
+      "desc": "Delicious Kerala-style biriyani."
+    }
+  ]
+}
