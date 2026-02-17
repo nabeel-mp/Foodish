@@ -52,6 +52,10 @@ exports.loginUser = async (req, res) => {
 
 // Get All Users (Admin)
 exports.getAllUsers = async (req, res) => {
-  const users = await User.find({}).select('-password');
-  res.json(users);
+  try {
+    const users = await User.find().select('-password'); 
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error while fetching users" });
+  }
 };
