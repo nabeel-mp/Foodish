@@ -7,7 +7,7 @@ import { FaBasketShopping } from "react-icons/fa6";
 import api from "../../api/axios";
 
 const MyOrder = () => {
-  const { user } = useContext(StoreContext);
+  const { user, token } = useContext(StoreContext);
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
@@ -19,11 +19,13 @@ const MyOrder = () => {
 
     const fetchOrders = async () => {
       try {
-        const res = await api.get("/orders");
-        const userOrders = res.data
-          .filter((order) => order.userId === user.id)
-          .sort((a, b) => b.id - a.id);
-        setOrders(userOrders);
+        const response = await api.get('/orders/myorders', {
+            headers: { Authorization: `Bearer ${token}` } // Ensure this is present
+        });
+        // const userOrders = res.data
+        //   .filter((order) => order.userId === user.id)
+        //   .sort((a, b) => b.id - a.id);
+        setOrders(response.data);
       } catch (err) {
         console.error("Error fetching orders:", err);
       }
@@ -54,8 +56,8 @@ const MyOrder = () => {
         </div>
       ) : (
           <div className="space-y-8 max-w-4xl mx-auto">
-          {orders.map((order) => (
-              <div key={order.id} className="bg-gray-800 p-6 rounded-lg shadow">
+          {orders.map((order, orderIndex) => (
+              <div key={order._id || order.id || `${order.date}-${orderIndex}`} className="bg-gray-800 p-6 rounded-lg shadow">
               <h2 className="text-xl font-bold mb-2 text-yellow-300">
                 Order #{order.id}
               </h2>
@@ -71,7 +73,7 @@ const MyOrder = () => {
                 <h3 className="font-semibold mb-2"> Items:</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm mb-4">
                   {(order.items || []).map((item, index) => (
-                    <li key={index}>
+                    <li key={item._id || item.id || item.productId || `${item.title}-${item.price}-${index}`}>
                       {item.title} x {item.quantity} — ₹{(item.price * item.quantity).toFixed(2)}
                     </li>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                   ))}

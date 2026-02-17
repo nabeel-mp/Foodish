@@ -5,7 +5,7 @@ import axios from "axios";
 import api from "../../api/axios";
 
 const Order = () => {
-  const { user, cartItems, setCartItems } = useContext(StoreContext);
+  const { user, cartItems, clearCart } = useContext(StoreContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -107,7 +107,7 @@ const Order = () => {
       await api.post("/orders", orderData);
 
       if (!singleProduct) {
-        setCartItems([]);
+        clearCart();
         localStorage.removeItem("cart");
       }
 
@@ -171,7 +171,7 @@ const Order = () => {
         <h2 className="text-xl font-bold mb-4">Order Summary</h2>
         <ul className="space-y-2 mb-4">
           {items.map((item, index) => (
-            <li key={index} className="flex justify-between">
+            <li key={item._id || item.id || `${item.title}-${item.price}-${index}`} className="flex justify-between">
               <span>
                 {item.title} x {item.quantity}
               </span>

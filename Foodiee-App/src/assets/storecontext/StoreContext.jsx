@@ -5,6 +5,10 @@ import { toast } from "react-hot-toast";
 export const StoreContext = createContext();
 
 const StoreProvider = ({ children }) => {
+  // 1. Initialize Token & User from LocalStorage immediately
+  // This prevents "flickering" or redirecting to login on page refresh
+  const [token, setToken] = useState(localStorage.getItem("accessToken") || "");
+  
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("user");
     return saved ? JSON.parse(saved) : null;
@@ -15,7 +19,16 @@ const StoreProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
 
-  // 1. Fetch Menu Data (Public)
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    const savedUser = JSON.parse(localStorage.getItem("user")); // Ensure user is saved here
+    if (savedToken) {
+        setToken(savedToken);
+        setUser(savedUser);
+    }
+}, []);
+
+  // 2. Fetch Menu Data (Public)
   useEffect(() => {
     const fetchMenu = async () => {
       try {
@@ -28,32 +41,35 @@ const StoreProvider = ({ children }) => {
     fetchMenu();
   }, []);
 
-  // 2. Fetch User Data (Private)
+  // 3. Fetch User Data (Private) - Depends on Token/User
   useEffect(() => {
-    if (user?.id) {
-      // Reload user data on refresh/login
+    if (token) {
+      // Reload user data on refresh/login if token exists
       const loadUserData = async () => {
         try {
-            const [cartRes, wishlistRes, ordersRes] = await Promise.all([
-                api.get("/cart"),
-                api.get("/wishlist"),
-                api.get(user.role === 'admin' ? "/orders" : "/orders/myorders")
-            ]);
+          // Add Authorization header manually if your axios interceptor doesn't handle it perfectly yet
+          const headers = { Authorization: `Bearer ${token}` };
 
-            // Backend returns cart object with 'items' array
-            const backendCart = cartRes.data?.items?.map(item => ({
-                ...item.productId, // Spread product details
-                quantity: item.quantity, // Add quantity from cart
-                cartItemId: item.productId._id // Helper for deletion logic
-            })) || [];
+          const [cartRes, wishlistRes, ordersRes] = await Promise.all([
+            api.get("/cart", { headers }),
+            api.get("/wishlist", { headers }),
+            api.get(user?.role === 'admin' ? "/orders" : "/orders/myorders", { headers })
+          ]);
 
-            setCartItems(backendCart);
-            setWishlist(wishlistRes.data || []);
-            setOrders(ordersRes.data || []);
+          // Backend returns cart object with 'items' array
+          const backendCart = cartRes.data?.items?.map(item => ({
+            ...item.productId, // Spread product details
+            quantity: item.quantity, // Add quantity from cart
+            cartItemId: item.productId._id // Helper for deletion logic
+          })) || [];
+
+          setCartItems(backendCart);
+          setWishlist(wishlistRes.data || []);
+          setOrders(ordersRes.data || []);
 
         } catch (error) {
           console.error("Error loading user data:", error);
-          // If token expired, logout logic here
+          // Optional: If error is 401/403, you might want to logout
         }
       };
       loadUserData();
@@ -63,11 +79,12 @@ const StoreProvider = ({ children }) => {
       setWishlist([]);
       setOrders([]);
     }
-  }, [user]);
+  }, [token, user]); // Re-run when token or user changes
 
   // --- Auth Handlers ---
   const handleLoginSuccess = (userData, accessToken) => {
     setUser(userData);
+    setToken(accessToken); // Update state
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("accessToken", accessToken);
   };
@@ -98,6 +115,7 @@ const StoreProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setToken(""); // Clear state
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
     toast.success("Logged out");
@@ -106,10 +124,10 @@ const StoreProvider = ({ children }) => {
   // --- Cart Functions ---
 
   const addToCart = async (product) => {
-    if (!user) return toast.error("Please login first");
+    if (!token) return toast.error("Please login first");
 
     try {
-      // Optimistic Update (makes UI feel fast)
+      // Optimistic Update
       setCartItems(prev => {
         const exist = prev.find(item => item._id === product._id);
         if (exist) {
@@ -123,7 +141,6 @@ const StoreProvider = ({ children }) => {
       toast.success("Added to Cart");
     } catch (error) {
       toast.error("Failed to add to cart");
-      // Revert state if needed (advanced)
     }
   };
 
@@ -153,7 +170,7 @@ const StoreProvider = ({ children }) => {
   // --- Wishlist Functions ---
 
   const addToWishlist = async (product) => {
-    if (!user) return toast.error("Please login first");
+    if (!token) return toast.error("Please login first");
     if (wishlist.some(item => item._id === product._id)) return;
 
     try {
@@ -180,9 +197,7 @@ const StoreProvider = ({ children }) => {
     try {
       const res = await api.post("/orders", orderData);
       setOrders(prev => [res.data, ...prev]);
-      // Clear cart locally and optionally call API to empty cart if you have that endpoint
       clearCart(); 
-      // Note: You might want to implement a DELETE /api/cart endpoint to empty server cart
       return true;
     } catch (err) {
       toast.error(err.response?.data?.message || "Order Failed");
@@ -193,6 +208,8 @@ const StoreProvider = ({ children }) => {
   return (
     <StoreContext.Provider
       value={{
+        token,      
+        setToken,   
         user,
         loginUser,
         registerUser,
