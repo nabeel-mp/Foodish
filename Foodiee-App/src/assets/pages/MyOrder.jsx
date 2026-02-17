@@ -1,14 +1,14 @@
-
 import React, { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../storecontext/StoreContext";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaBasketShopping } from "react-icons/fa6";
+import { FaBoxOpen, FaTruck, FaCheckCircle, FaClock } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 import api from "../../api/axios";
 
 const MyOrder = () => {
   const { user, token } = useContext(StoreContext);
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,73 +19,150 @@ const MyOrder = () => {
 
     const fetchOrders = async () => {
       try {
+        setLoading(true);
         const response = await api.get('/orders/myorders', {
-            headers: { Authorization: `Bearer ${token}` } // Ensure this is present
+          headers: { Authorization: `Bearer ${token}` }
         });
-        // const userOrders = res.data
-        //   .filter((order) => order.userId === user.id)
-        //   .sort((a, b) => b.id - a.id);
         setOrders(response.data);
       } catch (err) {
         console.error("Error fetching orders:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchOrders();
-  }, [user, navigate]);
+  }, [user, navigate, token]);
 
-  if (!user) {
-     return (
-         <div className="my-orders-empty">
-             <h2>Please log in to view orders</h2>
-             <button onClick={() => navigate("/login")}>Login</button>
-         </div>
-     )
+  // Helper to get status color and icon
+  const getStatusDetails = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'delivered': return { color: 'text-green-500 bg-green-50', icon: <FaCheckCircle /> };
+      case 'out for delivery': return { color: 'text-blue-500 bg-blue-50', icon: <FaTruck /> };
+      case 'processing': return { color: 'text-yellow-600 bg-yellow-50', icon: <FaClock /> };
+      default: return { color: 'text-gray-500 bg-gray-50', icon: <FaBoxOpen /> };
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 pt-24">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500 mb-4"></div>
+        <p className="text-gray-500 font-medium">Fetching your orders...</p>
+      </div>
+    );
   }
 
   return (
-      
-      <div className="p-6 min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-        <h1 className="text-4xl font-bold text-center mt-20 mb-10 text-yellow-400">My Orders</h1>
-      {orders.length === 0 ? (
-          <div className="bg-transparent relative top-40">
-        <FaBasketShopping size={80} className="text-center text-yellow-500 ml-142"/>
-        <br />
-        <p className="text-center text-yellow-400 font-semibold text-3xl">You not Order Any Items</p>
-        <p className="text-center text-gray-400 font-mono text-xl mt-2">You have not placed any orders yet.</p>
+    <div className="min-h-screen bg-gray-50 pt-28 pb-16 px-4 md:px-8">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-10">
+          <h2 className="text-4xl font-black text-gray-900 tracking-tight">
+            Order <span className="text-yellow-500">History</span>
+          </h2>
+          <p className="text-gray-500 mt-1">Track and manage your past and current orders.</p>
         </div>
-      ) : (
-          <div className="space-y-8 max-w-4xl mx-auto">
-          {orders.map((order, orderIndex) => (
-              <div key={order._id || order.id || `${order.date}-${orderIndex}`} className="bg-gray-800 p-6 rounded-lg shadow">
-              <h2 className="text-xl font-bold mb-2 text-yellow-300">
-                Order #{order.id}
-              </h2>
-              <p className="mb-2 text-sm text-gray-400"> Date: {order.date}</p>
-              <p className="mb-2"> Payment: <span className="text-green-400">{order.paymentMethod || "N/A"}</span></p>
-              <p className="mb-2"> Address: <span className="text-blue-300">{order.address || "Not provided"}</span></p>
-              <p className="mb-2"> Name: <span className="text-blue-300">{order.name || "Not provided"}</span></p>
-              <p className="mb-2"> Phone Number: <span className="text-blue-300">{order.phone || "Not provided"}</span></p>
-              <p className="mb-2 font-semibold"> Status: <span className="text-yellow-300">{order.status}</span></p>
-              <p className="mb-4 font-bold"> Total: ₹{order.total.toFixed(2)}</p>
 
-              <div className="border-t border-gray-600 pt-4">
-                <h3 className="font-semibold mb-2"> Items:</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm mb-4">
-                  {(order.items || []).map((item, index) => (
-                    <li key={item._id || item.id || item.productId || `${item.title}-${item.price}-${index}`}>
-                      {item.title} x {item.quantity} — ₹{(item.price * item.quantity).toFixed(2)}
-                    </li>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                  ))}
-                </ul>
-              </div>
+        {orders.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-[3rem] p-12 text-center shadow-xl shadow-gray-200/50 border border-gray-100"
+          >
+            <div className="w-24 h-24 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FaBoxOpen className="text-yellow-500 text-4xl" />
             </div>
-          ))}
-        </div>
-      )}
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">No orders found</h3>
+            <p className="text-gray-500 mb-8 max-w-xs mx-auto">
+              You haven't placed any orders yet. Head over to our menu to find something delicious!
+            </p>
+            <button 
+              onClick={() => navigate('/menu')}
+              className="bg-gray-900 text-white px-10 py-4 rounded-2xl font-bold hover:bg-yellow-500 transition-all active:scale-95 shadow-lg"
+            >
+              Browse Menu
+            </button>
+          </motion.div>
+        ) : (
+          <div className="space-y-6">
+            <AnimatePresence>
+              {orders.map((order, idx) => {
+                const statusInfo = getStatusDetails(order.status);
+                return (
+                  <motion.div
+                    key={order._id || order.id || idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                  >
+                    {/* Order Header */}
+                    <div className="p-6 md:p-8 flex flex-col md:flex-row justify-between gap-4 border-b border-gray-50">
+                      <div className="flex items-center space-x-4">
+                        <div className={`p-4 rounded-2xl ${statusInfo.color} text-2xl`}>
+                          {statusInfo.icon}
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-widest font-bold text-gray-400">Order ID</p>
+                          <p className="text-lg font-black text-gray-900">#{order.id || order._id?.slice(-6)}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-4 md:text-right">
+                        <div>
+                          <p className="text-xs uppercase tracking-widest font-bold text-gray-400">Date</p>
+                          <p className="font-bold text-gray-700">{order.date}</p>
+                        </div>
+                        <div className="md:ml-8">
+                          <p className="text-xs uppercase tracking-widest font-bold text-gray-400">Total Amount</p>
+                          <p className="text-xl font-black text-yellow-500">₹{order.total.toFixed(2)}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Order Body */}
+                    <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/30">
+                      <div>
+                        <h4 className="text-sm font-black text-gray-900 uppercase tracking-wider mb-4">Items Ordered</h4>
+                        <ul className="space-y-3">
+                          {(order.items || []).map((item, i) => (
+                            <li key={i} className="flex justify-between items-center text-sm">
+                              <span className="text-gray-600 font-medium">
+                                <span className="text-gray-900 font-bold">{item.quantity}x</span> {item.title}
+                              </span>
+                              <span className="text-gray-400">₹{(item.price * item.quantity).toFixed(2)}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h4 className="text-sm font-black text-gray-900 uppercase tracking-wider mb-2">Delivery Details</h4>
+                        <div className="text-sm space-y-1">
+                          <p className="text-gray-900 font-bold">{order.name}</p>
+                          <p className="text-gray-500 leading-relaxed">{order.address}</p>
+                          <p className="text-gray-500">{order.phone}</p>
+                        </div>
+                        
+                        <div className="pt-4 flex items-center justify-between">
+                          <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-tighter ${statusInfo.color}`}>
+                            {order.status}
+                          </span>
+                          <span className="text-xs text-gray-400 font-medium italic">
+                            Paid via {order.paymentMethod}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
 export default MyOrder;
-
