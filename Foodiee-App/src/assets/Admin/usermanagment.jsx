@@ -17,12 +17,13 @@ const UserDetails = () => {
     const fetchData = async () => {
       try {
         const [userRes, ordersRes] = await Promise.all([
-          api.get(`/userDetails/${userId}`),
+          api.get(`/admin/users/${userId}`),
           api.get(`/orders?userId=${userId}`)
         ]);
-
-        setUser(userRes.data);
-        setOrders(ordersRes.data);
+        if (response.data.success) {
+          setUserData(response.data.data.user);
+          setOrders(response.data.data.orders);
+        }
 
         // Calculate total items ordered
         const count = ordersRes.data.reduce(
@@ -52,7 +53,7 @@ const UserDetails = () => {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
         <h2 className="text-2xl font-bold text-gray-800">User not found!</h2>
-        <button 
+        <button
           onClick={() => navigate("/admin/users")}
           className="mt-4 text-yellow-600 hover:underline"
         >
@@ -65,7 +66,7 @@ const UserDetails = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
       <div className="max-w-5xl mx-auto">
-        
+
         {/* --- Header / Back Button --- */}
         <button
           onClick={() => navigate("/admin/users")}
@@ -81,16 +82,16 @@ const UserDetails = () => {
             <div className="relative flex justify-between items-end -mt-12 mb-6">
               <div className="flex items-end gap-5">
                 <div className="w-24 h-24 rounded-full bg-white p-1 shadow-md">
-                   <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center text-3xl font-bold text-gray-400">
-                     {user.name?.charAt(0).toUpperCase()}
-                   </div>
+                  <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center text-3xl font-bold text-gray-400">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
                 </div>
                 <div className="mb-1">
-                   <h1 className="text-3xl font-bold text-gray-900">{user.name}</h1>
-                   <div className="flex items-center gap-2 text-gray-500">
-                     <FaEnvelope className="text-sm" />
-                     <span>{user.email}</span>
-                   </div>
+                  <h1 className="text-3xl font-bold text-gray-900">{user.name}</h1>
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <FaEnvelope className="text-sm" />
+                    <span>{user.email}</span>
+                  </div>
                 </div>
               </div>
               <div className={`px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wide border ${user.status === 'active' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}`}>
@@ -100,42 +101,42 @@ const UserDetails = () => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-100 pt-6">
-               <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4">
-                 <div className="p-3 bg-white rounded-lg shadow-sm text-yellow-500">
-                   <FaShoppingBag size={20} />
-                 </div>
-                 <div>
-                   <p className="text-gray-500 text-xs font-bold uppercase">Total Orders</p>
-                   <p className="text-xl font-bold text-gray-900">{orders.length}</p>
-                 </div>
-               </div>
-               
-               <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4">
-                 <div className="p-3 bg-white rounded-lg shadow-sm text-yellow-500">
-                   <FaUtensilsIcon /> 
-                 </div>
-                 <div>
-                   <p className="text-gray-500 text-xs font-bold uppercase">Dishes Ordered</p>
-                   <p className="text-xl font-bold text-gray-900">{orderedItemCount}</p>
-                 </div>
-               </div>
+              <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4">
+                <div className="p-3 bg-white rounded-lg shadow-sm text-yellow-500">
+                  <FaShoppingBag size={20} />
+                </div>
+                <div>
+                  <p className="text-gray-500 text-xs font-bold uppercase">Total Orders</p>
+                  <p className="text-xl font-bold text-gray-900">{orders.length}</p>
+                </div>
+              </div>
 
-               <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4">
-                 <div className="p-3 bg-white rounded-lg shadow-sm text-red-400">
-                   <FaHeart size={20} />
-                 </div>
-                 <div>
-                   <p className="text-gray-500 text-xs font-bold uppercase">Wishlist</p>
-                   <p className="text-xl font-bold text-gray-900">{user.wishlist?.length || 0}</p>
-                 </div>
-               </div>
+              <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4">
+                <div className="p-3 bg-white rounded-lg shadow-sm text-yellow-500">
+                  <FaUtensilsIcon />
+                </div>
+                <div>
+                  <p className="text-gray-500 text-xs font-bold uppercase">Dishes Ordered</p>
+                  <p className="text-xl font-bold text-gray-900">{orderedItemCount}</p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4">
+                <div className="p-3 bg-white rounded-lg shadow-sm text-red-400">
+                  <FaHeart size={20} />
+                </div>
+                <div>
+                  <p className="text-gray-500 text-xs font-bold uppercase">Wishlist</p>
+                  <p className="text-xl font-bold text-gray-900">{user.wishlist?.length || 0}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* --- Order History Section --- */}
         <h3 className="text-xl font-bold text-gray-900 mb-5 pl-2 border-l-4 border-yellow-500">Order History</h3>
-        
+
         {orders.length === 0 ? (
           <div className="bg-white rounded-2xl p-10 text-center shadow-sm border border-gray-100">
             <p className="text-gray-400 text-lg">No orders found for this user.</p>
@@ -144,7 +145,7 @@ const UserDetails = () => {
           <div className="space-y-6">
             {orders.map((order) => (
               <div key={order.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                
+
                 {/* Order Header */}
                 <div className="bg-gray-50 px-6 py-4 flex flex-wrap justify-between items-center border-b border-gray-100 gap-3">
                   <div className="flex gap-4 items-center">
@@ -152,11 +153,10 @@ const UserDetails = () => {
                     <span className="text-gray-400 text-sm">|</span>
                     <span className="text-gray-500 text-sm">{order.date || "Unknown Date"}</span>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                    order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
-                    order.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
-                    'bg-blue-100 text-blue-700'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
+                      order.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
+                        'bg-blue-100 text-blue-700'
+                    }`}>
                     {order.status || 'Processing'}
                   </span>
                 </div>
@@ -174,8 +174,8 @@ const UserDetails = () => {
                     <div className="flex gap-3">
                       <FaCreditCard className="text-gray-400 mt-1" />
                       <div>
-                         <p className="text-xs text-gray-500 font-bold uppercase mb-1">Payment</p>
-                         <p className="text-gray-800 text-sm font-medium">{order.paymentMethod}</p>
+                        <p className="text-xs text-gray-500 font-bold uppercase mb-1">Payment</p>
+                        <p className="text-gray-800 text-sm font-medium">{order.paymentMethod}</p>
                       </div>
                     </div>
                   </div>
@@ -187,9 +187,9 @@ const UserDetails = () => {
                       {order.items?.map((item, idx) => (
                         <div key={idx} className="flex justify-between items-center text-sm">
                           <div className="flex items-center gap-3">
-                             <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
-                             <span className="text-gray-700 font-medium">{item.title}</span>
-                             <span className="text-gray-400 text-xs">x{item.quantity}</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+                            <span className="text-gray-700 font-medium">{item.title}</span>
+                            <span className="text-gray-400 text-xs">x{item.quantity}</span>
                           </div>
                           <span className="font-bold text-gray-900">₹{item.price * item.quantity}</span>
                         </div>

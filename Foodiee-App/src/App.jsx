@@ -27,6 +27,7 @@ import Users from "./assets/Admin/users";
 import { StoreContext } from "./assets/storecontext/Storecontext";
 import ScrollToTop from "./assets/pages/Scrolltotop";
 import {Toaster} from "react-hot-toast"
+import UserDetails from "./assets/Admin/UserDetails";
 
 
 
@@ -48,7 +49,7 @@ const App = () => {
     <Route index element={<Navigate to="dashboard"/>}/>
     <Route path="dashboard" element={<Dashboard/>}/>
     <Route path="menu" element={<MenuManagement/>}/>
-    <Route path="user/:userId" element={<UsersManagement/>}/>
+    <Route path='users/:id' element={<UserDetails/>}/>
     <Route path="users" element={<Users/>}/> </Route>
 
 

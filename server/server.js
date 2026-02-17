@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const adminRoutes = require('./routes/adminRoutes');
 
 // Config
 dotenv.config();
@@ -22,6 +23,7 @@ app.use('/api/menuItems', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/wishlist', require('./routes/wishlistRoutes'));
+app.use('/api/admin', adminRoutes);
 
 // Root Route
 app.get('/', (req, res) => {

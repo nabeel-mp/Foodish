@@ -22,13 +22,21 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await api.get("/userDetails");
-        setUsers(res.data);
-        setFilteredUsers(res.data);
+        const res = await api.get("/admin/users");
+       if (res.data.success) {
+          setUsers(res.data.data);
+          setFilteredUsers(res.data.data);
+        } else {
+           // Fallback if success is false but no error threw
+           setUsers([]);
+           setFilteredUsers([]);
+        }
         setError(null);
       } catch (err) {
         console.error("Error fetching users:", err);
         setError("Failed to fetch users. Please try again later.");
+        setUsers([]);
+        setFilteredUsers([]);
       } finally {
         setLoading(false);
       }
@@ -50,7 +58,7 @@ const Users = () => {
     if (!window.confirm("Are you sure you want to delete this user? This cannot be undone.")) return;
 
     try {
-      await api.delete(`/userDetails/${id}`);
+      await api.delete(`/admin/users/${id}`);
       setUsers((prev) => prev.filter((user) => (user.id || user._id) !== id));
     } catch (err) {
       alert("Failed to delete user");
