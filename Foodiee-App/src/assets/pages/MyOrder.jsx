@@ -115,7 +115,7 @@ const MyOrder = () => {
                         </div>
                         <div className="md:ml-8">
                           <p className="text-xs uppercase tracking-widest font-bold text-gray-400">Total Amount</p>
-                          <p className="text-xl font-black text-yellow-500">₹{order.total.toFixed(2)}</p>
+                          <p className="text-xl font-black text-yellow-500">₹{order.toFixed(2)}</p>
                         </div>
                       </div>
                     </div>

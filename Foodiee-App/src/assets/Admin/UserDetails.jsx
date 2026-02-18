@@ -102,7 +102,7 @@ const UserDetails = () => {
                         <tr key={order._id} className="hover:bg-gray-50">
                           <td className="p-4 font-mono text-xs text-gray-400">#{order._id.slice(-6)}</td>
                           <td className="p-4">{new Date(order.createdAt).toLocaleDateString()}</td>
-                          <td className="p-4 font-medium text-gray-900">₹{order.amount}</td>
+                          <td className="p-4 font-medium text-gray-900">₹{order.total}</td>
                           <td className="p-4">
                             <span className={`px-2 py-1 rounded text-xs font-bold ${
                               order.status === 'Delivered' ? 'bg-green-100 text-green-700' :

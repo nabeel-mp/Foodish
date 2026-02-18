@@ -9,7 +9,7 @@ exports.getDashboardStats = async (req, res) => {
     const totalOrders = await Order.countDocuments();
 
     const revenueData = await Order.aggregate([
-      { $group: { _id: null, totalRevenue: { $sum: "$amount" } } }
+      { $group: { _id: null, totalRevenue: { $sum: "$total" } } }
     ]);
     const totalRevenue = revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
 
