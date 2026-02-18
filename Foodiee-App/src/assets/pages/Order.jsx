@@ -2,17 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../storecontext/StoreContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaMapMarkerAlt, FaPhoneAlt, FaUser, FaCreditCard, FaLock } from "react-icons/fa";
-import api from "../../api/axios";
+import { FaMapMarkerAlt, FaPhoneAlt, FaUser, FaArrowRight } from "react-icons/fa";
 
 const Order = () => {
-  const { user, cartItems, clearCart } = useContext(StoreContext);
+  const { user, cartItems } = useContext(StoreContext);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [paymentMethod, setPaymentMethod] = useState("UPI");
   const [singleProduct, setSingleProduct] = useState(null);
-  const [isPlacing, setIsPlacing] = useState(false);
   const [error, setError] = useState("");
   const [userData, setUserData] = useState({
     name: "",
@@ -67,7 +64,7 @@ const Order = () => {
     setUserData({ ...userData, [name]: value });
   };
 
-  const placeOrder = async (e) => {
+  const proceedToPayment = (e) => {
     e.preventDefault();
     const { name, address, phone } = userData;
 
@@ -92,7 +89,7 @@ const Order = () => {
     localStorage.setItem("deliverAddress", address);
 
     const orderData = {
-      userId: user.id,
+      userId: user.id, // Or user._id based on your backend
       items,
       name,
       phone,
@@ -101,27 +98,12 @@ const Order = () => {
       subtotal,
       tax: CGST + SGST,
       deliverycharge,
-      paymentMethod,
-      status: "Order Placed",
+      status: "Payment Pending",
       date: new Date().toLocaleString(),
     };
 
-    try {
-      setIsPlacing(true);
-      await api.post("/orders", orderData);
-
-      if (!singleProduct) {
-        clearCart();
-        localStorage.removeItem("cart");
-      }
-
-      navigate("/thankyou", { state: { orderData }, replace: true });
-    } catch (err) {
-      console.error("Order placement failed:", err);
-      setError("Failed to place order. Please try again.");
-    } finally {
-      setIsPlacing(false);
-    }
+    // Navigate to the new payment page and pass the order data
+    navigate("/payment", { state: { orderData, singleProduct }, replace: true });
   };
 
   return (
@@ -160,35 +142,18 @@ const Order = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-xs font-black uppercase text-gray-400 ml-2 mb-2 block">Phone Number</label>
-                    <div className="relative">
-                      <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" />
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="10-digit number"
-                        value={userData.phone}
-                        onChange={handleChange}
-                        className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-yellow-500 transition-all outline-none text-gray-700 font-medium"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-black uppercase text-gray-400 ml-2 mb-2 block">Payment Method</label>
-                    <div className="relative">
-                      <FaCreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" />
-                      <select
-                        value={paymentMethod}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-yellow-500 transition-all outline-none text-gray-700 font-medium appearance-none"
-                      >
-                        <option value="UPI">UPI / Google Pay</option>
-                        <option value="COD">Cash On Delivery</option>
-                        <option value="ATM">Debit / Credit Card</option>
-                      </select>
-                    </div>
+                <div>
+                  <label className="text-xs font-black uppercase text-gray-400 ml-2 mb-2 block">Phone Number</label>
+                  <div className="relative">
+                    <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" />
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="10-digit number"
+                      value={userData.phone}
+                      onChange={handleChange}
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-yellow-500 transition-all outline-none text-gray-700 font-medium"
+                    />
                   </div>
                 </div>
 
@@ -222,7 +187,7 @@ const Order = () => {
                 {items.map((item, index) => (
                   <div key={index} className="flex justify-between items-center text-sm">
                     <span className="text-gray-600 font-medium">
-                      <span className="text-gray-900 font-bold">{item.quantity}x</span> {item.title}
+                      <span className="text-gray-900 font-bold">{item.quantity}x</span> {item.title || item.name}
                     </span>
                     <span className="font-bold text-gray-900">₹{(item.price * item.quantity).toFixed(2)}</span>
                   </div>
@@ -249,14 +214,11 @@ const Order = () => {
               </div>
 
               <button
-                onClick={placeOrder}
-                disabled={isPlacing}
-                className={`w-full mt-8 py-5 rounded-2xl font-black text-lg transition-all transform active:scale-95 flex items-center justify-center space-x-3 shadow-lg ${
-                  isPlacing ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-gray-900 text-white hover:bg-yellow-500 hover:shadow-yellow-100"
-                }`}
+                onClick={proceedToPayment}
+                className="w-full mt-8 py-5 rounded-2xl font-black text-lg transition-all transform active:scale-95 flex items-center justify-center space-x-3 shadow-lg bg-gray-900 text-white hover:bg-yellow-500 hover:shadow-yellow-100"
               >
-                <FaLock className="text-sm" />
-                <span>{isPlacing ? "Placing..." : "Confirm Order"}</span>
+                <span>Proceed to Payment</span>
+                <FaArrowRight className="text-sm" />
               </button>
             </div>
           </div>

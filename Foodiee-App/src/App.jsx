@@ -29,6 +29,7 @@ import ScrollToTop from "./assets/pages/Scrolltotop";
 import {Toaster} from "react-hot-toast"
 import UserDetails from "./assets/Admin/UserDetails";
 import OrderManagement from "./assets/Admin/ordermanagment";
+import Payment from "./assets/pages/Payment";
 
 
 
@@ -80,6 +81,12 @@ const App = () => {
         element={
           <ProtectedRoute>
             {isAdmin ? <Navigate to='/admin/dashboard'/> : <Order/>}
+          </ProtectedRoute>
+        } />
+         <Route path="/payment" J
+        element={
+          <ProtectedRoute>
+            {isAdmin ? <Navigate to='/admin/dashboard'/> : <Payment/>}
           </ProtectedRoute>
         } />
         <Route path="/myorders"

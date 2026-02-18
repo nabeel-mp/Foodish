@@ -1,3 +1,5 @@
+const Stripe = require('stripe');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const Order = require('../models/Order');
 
 // Place Order
@@ -50,3 +52,79 @@ exports.getAllOrders = async (req, res) => {
   const orders = await Order.find({}).populate('userId', 'id name email');
   res.json(orders);
 };
+
+exports.placeOrderStripe = async (req, res) => {
+    try {
+        const { items, total, address, name, phone, userId } = req.body;
+        
+        // 1. Save the initial order to the database (paymentStatus: false)
+        const newOrder = new Order({
+            user: req.user ? req.user_id : userId ,
+            userId: userId, 
+            items,
+            total,
+            address,
+            name,
+            phone,
+            paymentMethod: 'Stripe',
+            paymentStatus: false
+        });
+        await newOrder.save();
+
+        // 2. Format the cart items for Stripe's 'line_items' array
+        const line_items = items.map((item) => ({
+            price_data: {
+                currency: 'inr', // Change to 'usd' or your preferred currency
+                product_data: {
+                    name: item.name || item.title || 'Food Item',
+                },
+                unit_amount: Math.round(item.price * 100),// Stripe requires the amount in subunits (e.g., paise/cents)
+            },
+            quantity: item.quantity
+        }));
+
+        // Optional: Add delivery charges as a line item
+        line_items.push({
+            price_data: {
+                currency: 'inr',
+                product_data: { name: 'Delivery Charges' },
+                unit_amount: 25 * 100 // Example: 50 INR
+            },
+            quantity: 1
+        });
+
+        // 3. Create the Stripe Checkout Session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: line_items,
+            mode: 'payment',
+            // Redirect URLs after Stripe finishes
+            success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${newOrder._id}`,
+            cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${newOrder._id}`
+        });
+
+        // 4. Send the session URL back to the frontend
+        res.json({ success: true, session_url: session.url });
+    } catch (error) {
+        console.error("Stripe Error:", error);
+        res.status(500).json({ success: false, message: 'Payment initiation failed' });
+    }
+}
+
+// Verify payment status after Stripe redirects back
+exports.verifyOrder = async (req, res) => {
+    const { orderId, success } = req.body;
+    try {
+        if (success === "true") {
+            // Update order to paid
+            await Order.findByIdAndUpdate(orderId, { paymentStatus: true });
+            res.json({ success: true, message: "Paid Successfully" });
+        } else {
+            // Delete order if payment failed/cancelled
+            await Order.findByIdAndDelete(orderId);
+            res.json({ success: false, message: "Payment Failed or Cancelled" });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Verification failed" });
+    }
+}

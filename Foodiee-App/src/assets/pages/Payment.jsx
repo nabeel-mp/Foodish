@@ -1,137 +1,121 @@
-// import React, { useContext, useEffect, useState } from "react";
-// import { StoreContext } from "../storecontext/storecontext";
-// import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaStripeS, FaLock, FaMoneyBillWave } from "react-icons/fa";
+import api from "../../api/axios";
 
-// const Payment = () => {
-//   const { user, placeOrder } = useContext(StoreContext);
-//   const [paymentMethod, setPaymentMethod] = useState("UPI");
-//   const [address, setAddress] = useState("");
-//   const [orderDetails, setOrderDetails]=useState(null)
-//   const navigate = useNavigate();
-//   const location =useLocation()
+const Payment = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isProcessing, setIsProcessing] = useState(false);
 
-//   useEffect(() => {
-//     if (!user) {
-//       navigate("/login")
-//       return
-//     }
+  // Retrieve the order data passed from the Order page
+  const orderData = location.state?.orderData;
+  const singleProduct = location.state?.singleProduct;
 
-//     const saveaddress =localStorage.getItem('deliveryAddress')
-//     if(saveaddress){
-//       setAddress(saveaddress)
-//     }
+  if (!orderData) {
+    // If someone tries to access /payment directly without going through checkout
+    navigate("/cart");
+    return null;
+  }
 
-//     const detailsState =location.state?.orderDetails
-//     const detailsStorage =JSON.parse(localStorage.getItem("orderDetails"))
+  // --- STRIPE PAYMENT HANDLER ---
+  const handleStripePayment = async () => {
+    setIsProcessing(true);
+    const token = localStorage.getItem("token");
+    try {
+      const response = await api.post("/orders/place-stripe", orderData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+      });
 
-//     if(detailsState){
-//       setOrderDetails(detailsState)
-//       localStorage.setItem("orderDetails",JSON.stringify(detailsState))
-//     }else if(detailsStorage){
-//       setOrderDetails(detailsStorage)
-//     }else{
-//       navigate('/order')
-//     }
-//   }, [user, location.state, navigate]);
+      if (response.data.success && response.data.session_url) {
+        // Redirect the user to the Stripe Checkout page
+        window.location.replace(response.data.session_url);
+      } else {
+        alert("Failed to initiate Stripe payment.");
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error("Stripe payment error:", error);
+      alert("Error connecting to payment gateway.");
+      setIsProcessing(false);
+    }
+  };
 
-//   if (!orderDetails) return null;
+  // --- CASH ON DELIVERY HANDLER (Optional) ---
+  const handleCOD = async () => {
+    const confirmOrder = window.confirm("Are you sure you want to place this order using Cash on Delivery?");
+    if (!confirmOrder) {
+      return; 
+    }
+    setIsProcessing(true);
+    try {
+      // Standard order placement for COD
+      const codOrderData = { ...orderData, paymentMethod: "COD" };
+      await api.post("/orders", codOrderData);
+      navigate("/thankyou", { state: { orderData: codOrderData }, replace: true });
+    } catch (error) {
+      console.error("COD error:", error);
+      alert("Failed to place COD order.");
+      setIsProcessing(false);
+    }
+  };
 
-//   // const grandTotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) * 1.05 + 40;
-//   const grandTotal =orderDetails.total;
+  return (
+    <div className="min-h-screen bg-gray-50 pt-28 pb-16 px-4 flex justify-center items-center">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white max-w-lg w-full p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 text-center"
+      >
+        <div className="bg-yellow-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <FaLock className="text-yellow-500 text-3xl" />
+        </div>
+        
+        <h2 className="text-3xl font-black text-gray-900 mb-2">Payment</h2>
+        <p className="text-gray-500 mb-8 font-medium">
+          Choose a payment method to complete your order of <span className="font-bold text-gray-900">₹{orderData.total.toFixed(2)}</span>
+        </p>
 
+        <div className="space-y-4">
+          {/* Stripe Button */}
+          <button
+            onClick={handleStripePayment}
+            disabled={isProcessing}
+            className={`w-full py-5 rounded-2xl font-black text-lg transition-all transform active:scale-95 flex items-center justify-center space-x-3 shadow-md ${
+              isProcessing ? "bg-indigo-400 text-white cursor-not-allowed" : "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-200"
+            }`}
+          >
+            
+            <span>{isProcessing ? "Processing..." : "Pay with UPI / Credit Card"}</span>
+          </button>
 
-//   const handlePayment = () => {
-     
-//     if (!address.trim()) {
-//       alert("Please enter your delivery address.");
-//       return;
-//     }
-//     if(address.length< 15){
-//       alert("Address must be atleast 15 Characters.")
-//       return
-//     }
-//     if(address.length > 160){
-//       alert("Address must be no more than 160 characters.")
-//       return
-//     }
-//     navigate("/thankyou", {replace: true})
+          <div className="flex items-center my-6">
+             <div className="flex-1 h-px bg-gray-200"></div>
+             <span className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">OR</span>
+             <div className="flex-1 h-px bg-gray-200"></div>
+          </div>
 
-//     localStorage.setItem('deliveryAddress',address)
+          {/* Cash on Delivery Button */}
+          <button
+            onClick={handleCOD}
+            disabled={isProcessing}
+            className={`w-full py-5 rounded-2xl font-black text-lg transition-all transform active:scale-95 flex items-center justify-center space-x-3 border-2 ${
+              isProcessing ? "bg-gray-100 text-gray-400 border-gray-100 cursor-not-allowed" : "bg-white text-gray-800 border-gray-200 hover:border-gray-900"
+            }`}
+          >
+            <span>Cash on Delivery</span>
+          </button>
+        </div>
 
-//     const finalOrder = {
-//       id: new Date().getTime(),
-//       userId: user.id,
-//       items: cartItems,
-//       total: parseFloat(grandTotal.toFixed(2)),
-//       ...orderDetails,
-//       paymentMethod,
-//       address,
-//       date: new Date().toLocaleString(),
-//       status: `Order Placed - ${paymentMethod}`,
-//     };
+        <p className="mt-8 text-xs text-gray-400 flex items-center justify-center">
+          <FaLock className="mr-1" /> Payments are secure and encrypted
+        </p>
+      </motion.div>
+    </div>
+  );
+};
 
-//     placeOrder(finalOrder);
-//     localStorage.removeItem('orderDetails')
-//     // clearCart();
-   
-//   };
-
-//   return (
-//     <div className="min-h-screen p-6 bg-gradient-to-r from-gray-900 to-black text-white">
-//       <h1 className="text-4xl font-bold text-center mb-8 text-yellow-400">Payment</h1>
-
-//       <div className="max-w-3xl mx-auto bg-gray-800 p-6 rounded shadow">
-//         <h2 className="text-2xl font-semibold mb-4">Delivery Address</h2>
-
-//         <textarea
-//           rows="4"
-//           className="w-full p-3 rounded bg-gray-700 text-white mb-6 resize-none"
-//           placeholder="Enter your full delivery address"
-//           value={address}
-//           onChange={(e) => setAddress(e.target.value)}
-//         />
-
-//         <h2 className="text-2xl font-semibold mb-4">Select Payment Method</h2>
-
-//         <div className="flex flex-col space-y-4 mb-6">
-//           <label className="flex items-center">
-//             <input
-//               type="radio"
-//               name="payment"
-//               value="UPI"
-//               checked={paymentMethod === "UPI"}
-//               onChange={() => setPaymentMethod("UPI")}
-//               className="mr-2"
-//             />
-//             <span>UPI (Google Pay, PhonePe, Paytm, etc.)</span>
-//           </label>
-
-//           <label className="flex items-center">
-//             <input
-//               type="radio"
-//               name="payment"
-//               value="COD"
-//               checked={paymentMethod === "COD"}
-//               onChange={() => setPaymentMethod("COD")}
-//               className="mr-2"
-//             />
-//             <span>Cash On Delivery (COD)</span>
-//           </label>
-//         </div>
-
-//         <div className="text-xl font-bold mb-4 border-t pt-4 border-gray-600">
-//           <p>Grand Total:{" "} <span className="text-yellow-400">₹{grandTotal.toFixed(2)}</span></p>
-//         </div>
-
-//         <button
-//           onClick={handlePayment}
-//           className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 px-6 rounded w-full"
-//         >
-//           Pay & Place Order
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Payment;
+export default Payment;

@@ -57,7 +57,7 @@ const Home = () => {
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight">
                   Don't Wait! <br/>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500">
-                    Let's Start
+                    Let's Eat
                   </span>
                 </h1>
               </motion.div>
