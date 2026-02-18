@@ -66,22 +66,41 @@ const Users = () => {
   }, []);
 
   // --- Toggle Block Status ---
-  const toggleBlockStatus = useCallback(async (id, currentStatus) => {
+ const toggleBlockStatus = useCallback(async (id, currentStatus) => {
+    // 1. Determine new status for optimistic UI update
     const newStatus = currentStatus === "active" ? "blocked" : "active";
-    // Optimistic update
-    const updatedUsers = users.map((user) => 
-      (user.id || user._id) === id ? { ...user, status: newStatus } : user
+
+    // 2. Optimistically update UI immediately
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        (user.id || user._id) === id ? { ...user, status: newStatus } : user
+      )
     );
-    setUsers(updatedUsers);
+    
+    // 3. Update the list of filtered users if you have a search filter active
+    setFilteredUsers((prev) => 
+      prev.map((user) => 
+        (user.id || user._id) === id ? { ...user, status: newStatus } : user
+      )
+    );
 
     try {
-      await api.patch(`/userDetails/${id}`, { status: newStatus });
+      // 4. Make the API Call to the CORRECT URL
+      // Note: We added '/admin' to the path to match the server.js mount point
+      await api.patch(`/admin/users/${id}/block`);
+      
     } catch (err) {
-      // Revert if failed
-      alert("Failed to update status");
-      setUsers(users); 
+      console.error("Block failed", err);
+      alert("Failed to update status. Reverting...");
+      
+      // 5. Revert UI if API fails
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          (user.id || user._id) === id ? { ...user, status: currentStatus } : user
+        )
+      );
     }
-  }, [users]);
+  }, []);
 
   // --- Render Loading ---
   if (loading) {

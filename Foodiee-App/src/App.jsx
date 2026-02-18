@@ -24,10 +24,11 @@ import MenuManagement from "./assets/Admin/menumanagment";
 import AdminProtectedRoute from "./assets/Admin/Adminrouter";
 import AdminSidebar from "./assets/Admin/Adminsidebar";
 import Users from "./assets/Admin/users";
-import { StoreContext } from "./assets/storecontext/Storecontext";
+import { StoreContext } from "./assets/storecontext/StoreContext";
 import ScrollToTop from "./assets/pages/Scrolltotop";
 import {Toaster} from "react-hot-toast"
 import UserDetails from "./assets/Admin/UserDetails";
+import OrderManagement from "./assets/Admin/ordermanagment";
 
 
 
@@ -50,7 +51,8 @@ const App = () => {
     <Route path="dashboard" element={<Dashboard/>}/>
     <Route path="menu" element={<MenuManagement/>}/>
     <Route path='users/:id' element={<UserDetails/>}/>
-    <Route path="users" element={<Users/>}/> </Route>
+    <Route path="users" element={<Users/>}/>
+    <Route path="orders" element={<OrderManagement/>}/> </Route>
 
 
         <Route path="/" element={isAdmin ? <Navigate to='/admin/dashboard'/> : <Home/>} />

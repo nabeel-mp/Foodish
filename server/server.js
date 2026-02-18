@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const adminRoutes = require('./routes/adminRoutes');
+const path = require('path');
 
 // Config
 dotenv.config();
@@ -24,6 +25,7 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/wishlist', require('./routes/wishlistRoutes'));
 app.use('/api/admin', adminRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Root Route
 app.get('/', (req, res) => {

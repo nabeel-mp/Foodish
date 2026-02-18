@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "./foodiee.jpeg";
-import { StoreContext } from "../storecontext/Storecontext";
+import { StoreContext } from "../storecontext/StoreContext";
 import { RiAccountPinCircleFill } from "react-icons/ri";
 import { HiMenu, HiX } from "react-icons/hi";
 import { FaCartShopping, FaBasketShopping } from "react-icons/fa6";

@@ -1,11 +1,11 @@
  @import "tailwindcss";
+ @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700;800&display=swap');
 
 body{
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700;800&display=swap');
 
 body {
   font-family: 'Poppins', sans-serif;

@@ -15,7 +15,12 @@ const orderSchema = new mongoose.Schema({
   address: { type: String, required: true },
   phone: { type: String, required: true },
   paymentMethod: { type: String, default: 'UPI' },
-  status: { type: String, default: 'Order Placed' }
+  status: { 
+    type: String, 
+    default: 'Pending', 
+    enum: ['Pending', 'Shipped', 'Delivered', 'Cancelled'] 
+  },
+  createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

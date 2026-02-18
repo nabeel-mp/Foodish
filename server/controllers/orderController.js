@@ -22,6 +22,23 @@ exports.addOrderItems = async (req, res) => {
   res.status(201).json(createdOrder);
 };
 
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+      order.status = status;
+      const updatedOrder = await order.save();
+      res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found' });   
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get Logged In User Orders
 exports.getMyOrders = async (req, res) => {
   const orders = await Order.find({ userId: req.user._id });

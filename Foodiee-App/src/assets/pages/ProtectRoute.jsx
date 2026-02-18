@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { StoreContext } from "../storecontext/Storecontext";
+import { StoreContext } from "../storecontext/StoreContext";
 
 const ProtectedRoute = ({ children, role }) => {
     const { token, user } = useContext(StoreContext)

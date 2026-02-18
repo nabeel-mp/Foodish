@@ -160,6 +160,7 @@ const Menu = () => {
               {filteredItems.map((item) => {
                 const itemId = item._id || item.id;
                 const isWishlisted = wishlist.some((i) => (i._id || i.id) === itemId);
+                const isAvailable = item.available !== false; // Handle undefined as true
 
                 return (
                   <motion.div
@@ -167,17 +168,17 @@ const Menu = () => {
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="group bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full relative"
+                    className={`group bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 flex flex-col h-full relative ${isAvailable ? 'hover:shadow-xl' : 'opacity-80'}`}
                   >
                     {/* Image Section */}
                     <div 
-                      className="relative h-52 w-full cursor-pointer overflow-hidden"
-                      onClick={() => navigate(`/products/${itemId}`)}
+                      className={`relative h-52 w-full overflow-hidden ${isAvailable ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                      onClick={() => isAvailable && navigate(`/products/${itemId}`)}
                     >
                       <img
                         src={item.img}
                         alt={item.title}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        className={`w-full h-full object-cover transition-transform duration-700 ${isAvailable ? 'group-hover:scale-110' : 'grayscale'}`}
                         loading="lazy"
                       />
                       <div className="absolute top-3 left-3">
@@ -185,13 +186,22 @@ const Menu = () => {
                           {item.category}
                         </span>
                       </div>
+                      
+                      {/* SOLD OUT OVERLAY */}
+                      {!isAvailable && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+                            <span className="text-white border-2 border-white px-4 py-2 font-bold tracking-wider text-xl rotate-[-15deg]">
+                                SOLD OUT
+                            </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Wishlist Button */}
                     {user && (
                       <button
                         onClick={() => isWishlisted ? removeFromWishlist(itemId) : addToWishlist(item)}
-                        className="absolute top-3 right-3 p-2.5 rounded-full bg-white shadow-lg hover:bg-gray-50 transition-colors z-10"
+                        className="absolute top-3 right-3 p-2.5 rounded-full bg-white shadow-lg hover:bg-gray-50 transition-colors z-20"
                       >
                         {isWishlisted ? (
                           <FaHeart className="text-red-500 text-lg" />
@@ -215,9 +225,14 @@ const Menu = () => {
                         </div>
                         <button 
                           onClick={() => navigate(`/products/${itemId}`)}
-                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-2xl font-bold text-sm transition-all shadow-md active:scale-95"
+                          disabled={!isAvailable}
+                          className={`px-5 py-2 rounded-2xl font-bold text-sm transition-all shadow-md active:scale-95 ${
+                            isAvailable 
+                            ? "bg-yellow-500 hover:bg-yellow-600 text-white" 
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                          }`}
                         >
-                          View
+                          {isAvailable ? "View" : "Sold Out"}
                         </button>
                       </div>
                     </div>

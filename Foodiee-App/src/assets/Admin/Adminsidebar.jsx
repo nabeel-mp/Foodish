@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { RiShoppingBag3Fill } from "react-icons/ri";
-import { StoreContext } from "../storecontext/Storecontext";
+import { StoreContext } from "../storecontext/StoreContext";
 
 const AdminSidebar = () => {
   const navigate = useNavigate();
