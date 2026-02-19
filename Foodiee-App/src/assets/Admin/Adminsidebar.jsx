@@ -6,7 +6,8 @@ import {
   FaSignOutAlt, 
   FaBars, 
   FaTimes, 
-  FaUtensils 
+  FaUtensils ,
+  FaTruck
 } from "react-icons/fa";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { RiShoppingBag3Fill } from "react-icons/ri";
@@ -31,6 +32,7 @@ const AdminSidebar = () => {
     { path: "menu", name: "Manage Menu", icon: <FaUtensils /> },
     { path: "users", name: "Users", icon: <FaUsers /> },
     { path: "orders", name: "Orders", icon: <RiShoppingBag3Fill /> }, // Added Orders if you have it
+    { path: "delivery-boys", name: "Delivery Personnel", icon: <FaTruck /> },
   ];
 
   return (

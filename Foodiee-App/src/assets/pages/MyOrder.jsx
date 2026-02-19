@@ -111,11 +111,11 @@ const MyOrder = () => {
                       <div className="flex flex-wrap gap-4 md:text-right">
                         <div>
                           <p className="text-xs uppercase tracking-widest font-bold text-gray-400">Date</p>
-                          <p className="font-bold text-gray-700">{order.date}</p>
+                          <p className="font-bold text-gray-700">{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</p>
                         </div>
                         <div className="md:ml-8">
                           <p className="text-xs uppercase tracking-widest font-bold text-gray-400">Total Amount</p>
-                          <p className="text-xl font-black text-yellow-500">₹{order.toFixed(2)}</p>
+                          <p className="text-xl font-black text-yellow-500">₹{order.total ? Number(order.total).toFixed(2) : '0.00'}</p>
                         </div>
                       </div>
                     </div>

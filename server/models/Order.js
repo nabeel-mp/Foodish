@@ -18,7 +18,12 @@ const orderSchema = new mongoose.Schema({
   status: { 
     type: String, 
     default: 'Pending', 
-    enum: ['Pending', 'Shipped', 'Delivered', 'Cancelled'] 
+    enum: ['Pending','Assigned', 'Shipped', 'Delivered', 'Cancelled'] 
+  },
+  deliveryBoy: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User',
+    default: null
   },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });

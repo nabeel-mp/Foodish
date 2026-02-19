@@ -4,7 +4,12 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  phone: { type: String },
+  role: { type: String, enum: ['user', 'admin', 'delivery'], default: 'user' },
+  isAvailable: { 
+    type: Boolean, 
+    default: true 
+  },
   status: { type: String, enum: ['active', 'blocked'], default: 'active' },
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
 }, { timestamps: true });

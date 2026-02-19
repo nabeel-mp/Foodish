@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const bcrypt = require('bcryptjs');
 
 exports.getDashboardStats = async (req, res) => {
   try {
@@ -121,5 +122,49 @@ exports.toggleUserBlock = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
+exports.createDeliveryBoy = async (req, res) => {
+  try {
+    const { name, email, password, phone } = req.body;
+
+    // 1. Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User with this email already exists" });
+    }
+
+    // 2. Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // 3. Create the user explicitly with the 'delivery' role
+    const deliveryBoy = new User({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      role: 'delivery',
+      isAvailable: true // Available by default when created
+    });
+
+    await deliveryBoy.save();
+
+    // Remove password from response
+    deliveryBoy.password = undefined; 
+    res.status(201).json({ message: "Delivery Personnel created successfully", deliveryBoy });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating delivery boy", error: error.message });
+  }
+};
+
+// Get all Delivery Boys and their status
+exports.getDeliveryBoys = async (req, res) => {
+  try {
+    const deliveryBoys = await User.find({ role: 'delivery' }).select('-password');
+    res.status(200).json(deliveryBoys);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching delivery personnel", error: error.message });
   }
 };

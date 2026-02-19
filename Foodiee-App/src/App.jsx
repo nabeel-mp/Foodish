@@ -30,6 +30,8 @@ import {Toaster} from "react-hot-toast"
 import UserDetails from "./assets/Admin/UserDetails";
 import OrderManagement from "./assets/Admin/ordermanagment";
 import Payment from "./assets/pages/Payment";
+import DeliveryDashboard from "./assets/Delivery/DeliveryDashboard";
+import DeliveryBoysManagement from "./assets/Admin/DeliveryBoysManagement";
 
 
 
@@ -53,7 +55,13 @@ const App = () => {
     <Route path="menu" element={<MenuManagement/>}/>
     <Route path='users/:id' element={<UserDetails/>}/>
     <Route path="users" element={<Users/>}/>
-    <Route path="orders" element={<OrderManagement/>}/> </Route>
+    <Route path="orders" element={<OrderManagement/>}/>
+    <Route path="delivery-boys" element={<DeliveryBoysManagement />} />
+     </Route>
+
+    {user?.role === 'delivery' && (
+      <Route path="/delivery" element={<DeliveryDashboard />} />
+    )}
 
 
         <Route path="/" element={isAdmin ? <Navigate to='/admin/dashboard'/> : <Home/>} />
