@@ -25,6 +25,10 @@ const orderSchema = new mongoose.Schema({
     ref: 'User',
     default: null
   },
+  status: {
+    type: String,
+    default: 'Pending' // Initial state
+},
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 

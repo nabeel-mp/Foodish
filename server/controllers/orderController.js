@@ -1,27 +1,52 @@
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const Order = require('../models/Order');
+const User = require('../models/User');
 
 // Place Order
 exports.addOrderItems = async (req, res) => {
-  const { items, total, address, name, phone, paymentMethod } = req.body;
 
-  if (items && items.length === 0) {
-    return res.status(400).json({ message: 'No order items' });
+  try {
+    const { items, total, address, name, phone, paymentMethod } = req.body;
+
+    const userId = req.user.id || req.user._id;
+
+    if (items && items.length === 0) {
+      return res.status(400).json({ message: 'No order items' });
+    }
+
+    const availableDeliveryBoy = await User.findOne({
+      role: 'delivery',
+      $or: [
+        { isAvailable: true },
+        { isAvailable: { $exists: false } }
+      ]
+    });
+
+    const order = new Order({
+      userId: req.user._id,
+      items,
+      totalAmount: total,
+      name,
+      deliveryAddress: address,
+      phone,
+      paymentMethod,
+      payment: false,
+      status: availableDeliveryBoy ? "Assigned" : "Pending",
+      deliveryBoy: availableDeliveryBoy ? availableDeliveryBoy._id : null
+    });
+
+    if (availableDeliveryBoy) {
+      availableDeliveryBoy.isAvailable = false;
+      await availableDeliveryBoy.save();
+    }
+
+    const createdOrder = await order.save();
+    res.status(201).json(createdOrder);
+  } catch {
+    console.error("Order Placement Error:", error);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
-
-  const order = new Order({
-    userId: req.user._id,
-    items,
-    total,
-    name,
-    address,
-    phone,
-    paymentMethod
-  });
-
-  const createdOrder = await order.save();
-  res.status(201).json(createdOrder);
 };
 
 exports.updateOrderStatus = async (req, res) => {
@@ -81,7 +106,7 @@ exports.placeOrderStripe = async (req, res) => {
     }
 
     await newOrder.save();
-res.status(201).json({ message: "Order placed successfully", order: newOrder });
+    res.status(201).json({ message: "Order placed successfully", order: newOrder });
 
     // 2. Format the cart items for Stripe's 'line_items' array
     const line_items = items.map((item) => ({
@@ -138,3 +163,45 @@ exports.verifyOrder = async (req, res) => {
     res.status(500).json({ success: false, message: "Verification failed" });
   }
 }
+
+exports.addOrder = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { items, totalAmount, deliveryAddress } = req.body;
+
+    // 1. Create order with default 'Pending' status
+    const newOrder = new Order({
+      userId,
+      items,
+      totalAmount,
+      deliveryAddress,
+      status: "Pending",
+      payment: false,
+    });
+
+    // 2. AUTOMATIC ASSIGNMENT: Find a delivery boy who is currently available
+    // Note: Change 'DeliveryBoy' to match whatever string you use for roles
+    const availableDeliveryBoy = await User.findOne({
+      role: 'DeliveryBoy',
+      isAvailable: true
+    });
+
+    // 3. If an available delivery boy exists, assign them immediately
+    if (availableDeliveryBoy) {
+      newOrder.deliveryBoy = availableDeliveryBoy._id;
+      newOrder.status = "Assigned";
+
+      // Mark the delivery boy as unavailable so they don't get multiple overlapping orders
+      availableDeliveryBoy.isAvailable = false;
+      await availableDeliveryBoy.save();
+    }
+
+    await newOrder.save();
+
+    res.status(201).json({ success: true, message: "Order placed successfully!", order: newOrder });
+
+  } catch (error) {
+    console.error("Order Placement Error:", error);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+};

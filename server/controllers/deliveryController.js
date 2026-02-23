@@ -1,26 +1,31 @@
 const Order = require('../models/Order');
 const User = require('../models/User');
 
-// FIXED: Added missing function to get all assigned orders for the Tracking component
 exports.getAssignedOrders = async (req, res) => {
   try {
+    const deliveryBoyId = req.user.id || req.user._id;
+    if (!deliveryBoyId) {
+      return res.status(400).json({ success: false, message: "Delivery boy ID not found in token" });
+    }
+
     const orders = await Order.find({
-      deliveryBoy: req.user._id,
+      deliveryBoy: deliveryBoyId,
       status: { $in: ['Assigned', 'Shipped'] }
-    }).populate('userId', 'name phone address'); // Populating just in case your UI needs it
+    }).populate('userId', 'name phone address');
 
     res.status(200).json(orders);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error fetching assigned orders:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 // Get the current active order for the logged-in delivery boy
 exports.getMyCurrentOrder = async (req, res) => {
   try {
-    const order = await Order.findOne({ 
-      deliveryBoy: req.user._id, 
-      status: { $in: ['Assigned', 'Shipped'] } 
+    const order = await Order.findOne({
+      deliveryBoy: req.user._id,
+      status: { $in: ['Assigned', 'Shipped'] }
     }).populate('userId', 'name phone address');
 
     res.status(200).json(order);
@@ -34,26 +39,27 @@ exports.updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
     const { status } = req.body;
+    const deliveryBoyId = req.user.id || req.user._id;
 
     const order = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
 
     if (!order) {
-        return res.status(404).json({ message: "Order not found" });
+      return res.status(404).json({ message: "Order not found" });
     }
 
+    order.status = status;
+    await order.save();
+
     if (status === 'Delivered') {
-      // 1. Mark delivery boy as available
-      await User.findByIdAndUpdate(req.user._id, { isAvailable: true });
+      const nextPendingOrder = await Order.findOne({ status: 'Pending' }).sort({ createdAt: 1 });
+      if (nextPendingOrder) {
+        // 2. If there is a pending order, assign it to this driver instantly!
+        nextPendingOrder.deliveryBoy = deliveryBoyId;
+        nextPendingOrder.status = "Assigned";
+        await nextPendingOrder.save();
 
-      // 2. AUTO-ASSIGN NEXT ORDER IN QUEUE:
-      const unassignedOrder = await Order.findOneAndUpdate(
-        { status: 'Pending', deliveryBoy: null },
-        { deliveryBoy: req.user._id, status: 'Assigned' },
-        { sort: { createdAt: 1 }, new: true } 
-      );
-
-      if (unassignedOrder) {
-         await User.findByIdAndUpdate(req.user._id, { isAvailable: false });
+      } else {
+        await User.findByIdAndUpdate(deliveryBoyId, { isAvailable: true });
       }
     }
 

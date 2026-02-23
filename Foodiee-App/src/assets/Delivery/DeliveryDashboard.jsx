@@ -19,10 +19,19 @@ const DeliveryDashboard = () => {
   const fetchCurrentOrder = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/delivery/my-order');
-      setCurrentOrder(res.data);
+      // Fetching from the updated backend controller endpoint
+      const res = await api.get('/delivery/assigned-orders');
+      
+      // Since the driver becomes unavailable upon assignment, 
+      // they should logically only have 1 active order at a time.
+      const activeOrder = res.data?.orders && res.data.orders.length > 0 
+                          ? res.data.orders[0] 
+                          : null;
+                          
+      setCurrentOrder(activeOrder);
     } catch (error) {
       console.error("Error fetching order", error);
+      toast.error("Failed to fetch active order");
     } finally {
       setLoading(false);
     }
@@ -37,11 +46,9 @@ const DeliveryDashboard = () => {
       await api.put(`/delivery/order/${currentOrder._id}/status`, { status });
       toast.success(`Order marked as ${status}`);
       
-      if (status === 'Delivered') {
-        fetchCurrentOrder(); 
-      } else {
-        setCurrentOrder({ ...currentOrder, status });
-      }
+      // Re-fetch to clear the dashboard if delivered, or update the UI to Shipped
+      fetchCurrentOrder(); 
+      
     } catch (error) {
       toast.error("Failed to update status");
       console.error("Error updating status", error);
@@ -123,7 +130,7 @@ const DeliveryDashboard = () => {
                     <div>
                       <h4 className="text-xs font-black uppercase text-gray-400 tracking-widest mb-1">Customer Address</h4>
                       <p className="text-lg font-bold text-gray-800 leading-tight">
-                        {currentOrder.userId?.address || "Address not provided"}
+                        {currentOrder.deliveryAddress?.street || currentOrder.userId?.address || "Address not provided"}
                       </p>
                     </div>
                   </div>
@@ -151,7 +158,7 @@ const DeliveryDashboard = () => {
                         className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-black py-5 rounded-2xl shadow-lg shadow-yellow-100 transition-all flex items-center justify-center space-x-3 group"
                       >
                         <FaTruck className="group-hover:translate-x-2 transition-transform" />
-                        <span>Start Delivery Path</span>
+                        <span>Start Delivery Path (Mark as Shipped)</span>
                       </button>
                     )}
                     
