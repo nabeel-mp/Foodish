@@ -22,7 +22,10 @@ const Login = () => {
         const parsedUser = JSON.parse(storedUser);
         if (parsedUser.role === "admin") {
           navigate("/admin/dashboard");
-        } else {
+        } else if (parsedUser.role === "delivery") {
+          navigate("/delivery")
+        } 
+        else {
           navigate("/");
         }
       } catch (e) {
@@ -48,7 +51,10 @@ const Login = () => {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       if (storedUser?.role === "admin") {
         navigate("/admin/dashboard");
-      } else {
+      } else if (storedUser?.role === "delivery") {
+        navigate("/delivery")
+      }
+      else {
         navigate("/");
       }
     } else {

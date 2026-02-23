@@ -7,6 +7,7 @@ import { RiAccountPinCircleFill } from "react-icons/ri";
 import { HiMenu, HiX } from "react-icons/hi";
 import { FaCartShopping, FaBasketShopping } from "react-icons/fa6";
 import { IoMdHeart } from "react-icons/io";
+import { FaRoute , FaTruck } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, logout, cartItems, wishlist } = useContext(StoreContext);
@@ -25,11 +26,11 @@ const Navbar = () => {
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
-  
-  if (confirmLogout) {
-    logout();
-    navigate("/");
-  }
+
+    if (confirmLogout) {
+      logout();
+      navigate("/");
+    }
   };
 
   const isActive = (path) => location.pathname === path;
@@ -43,14 +44,13 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-white/70 backdrop-blur-xl shadow-sm py-3"
-          : "bg-transparent py-5"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+        ? "bg-white/70 backdrop-blur-xl shadow-sm py-3"
+        : "bg-transparent py-5"
+        }`}
     >
       <div className="container max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
-        
+
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 z-50">
           <motion.img
@@ -66,13 +66,12 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-8 items-center font-semibold text-gray-700">
-          {navLinks.map((link) => (
+          {user?.role !== "delivery" && navLinks.map((link) => (
             <li key={link.path} className="relative group cursor-pointer">
               <Link
                 to={link.path}
-                className={`transition-colors duration-300 ${
-                  isActive(link.path) ? "text-yellow-500" : "hover:text-yellow-500"
-                }`}
+                className={`transition-colors duration-300 ${isActive(link.path) ? "text-yellow-500" : "hover:text-yellow-500"
+                  }`}
               >
                 {link.label}
               </Link>
@@ -86,63 +85,79 @@ const Navbar = () => {
               <div className="absolute -bottom-1 left-0 h-[2px] bg-yellow-500 rounded-full w-0 group-hover:w-full transition-all duration-300 opacity-50" />
             </li>
           ))}
+
+          {user?.role === "delivery" && (
+            <>
+              <Link to="/delivery" className={`flex items-center gap-2 ${isActive("/delivery") ? "text-yellow-500" : ""}`}>
+                <FaTruck /> Dashboard
+              </Link>
+              <Link to="/delivery-tracking" className={`flex items-center gap-2 ${isActive("/delivery-tracking") ? "text-yellow-500" : ""}`}>
+                <FaRoute /> Tracking
+              </Link>
+            </>
+          )}
         </ul>
 
         {/* Right Side Icons & Auth (Desktop) */}
         <div className="hidden md:flex items-center gap-7">
           {user && (
             <>
-              {/* Cart Icon */}
-              <Link to="/cart" className="relative text-gray-700 hover:text-yellow-500 transition-colors">
-                <motion.div whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.9 }}>
-                  <FaCartShopping size={24} />
-                </motion.div>
-                <AnimatePresence>
-                  {cartItems?.length > 0 && (
-                    <motion.span
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      className="absolute -top-2 -right-2 bg-yellow-500 text-xs font-bold text-white rounded-full h-5 w-5 flex items-center justify-center border-2 border-white shadow-sm"
-                    >
-                      {cartItems.length}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </Link>
+              {user.role !== "delivery" && (
+                <>
+                  {/* Cart Icon */}
+                  <Link to="/cart" className="relative text-gray-700 hover:text-yellow-500 transition-colors">
+                    <motion.div whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.9 }}>
+                      <FaCartShopping size={24} />
+                    </motion.div>
+                    <AnimatePresence>
+                      {cartItems?.length > 0 && (
+                        <motion.span
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          className="absolute -top-2 -right-2 bg-yellow-500 text-xs font-bold text-white rounded-full h-5 w-5 flex items-center justify-center border-2 border-white shadow-sm"
+                        >
+                          {cartItems.length}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Link>
 
-              {/* Wishlist Icon */}
-              <Link to="/wishlist" className="relative text-gray-700 hover:text-red-500 transition-colors">
-                <motion.div whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.9 }}>
-                  <IoMdHeart size={26} />
-                </motion.div>
-                <AnimatePresence>
-                  {wishlist?.length > 0 && (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="absolute -top-2 -right-2 bg-red-500 text-xs font-bold text-white rounded-full h-5 w-5 flex items-center justify-center border-2 border-white shadow-sm"
-                    >
-                      {wishlist.length}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </Link>
-
+                  {/* Wishlist Icon */}
+                  <Link to="/wishlist" className="relative text-gray-700 hover:text-red-500 transition-colors">
+                    <motion.div whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.9 }}>
+                      <IoMdHeart size={26} />
+                    </motion.div>
+                    <AnimatePresence>
+                      {wishlist?.length > 0 && (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0 }}
+                          className="absolute -top-2 -right-2 bg-red-500 text-xs font-bold text-white rounded-full h-5 w-5 flex items-center justify-center border-2 border-white shadow-sm"
+                        >
+                          {wishlist.length}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Link>
               {/* Orders Icon */}
               <Link to="/myorders" className={`text-gray-700 hover:text-yellow-500 transition-colors ${isActive("/myorders") ? "text-yellow-500" : ""}`}>
                 <motion.div whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.9 }}>
                   <FaBasketShopping size={24} />
                 </motion.div>
               </Link>
+                </>
+              )}
+
+
 
               {/* Profile/Logout */}
               <div className="flex items-center gap-3 border-l pl-5 border-gray-200">
                 <span className="text-gray-800 font-medium text-sm">
                   Hi, <span className="text-yellow-500 font-bold">{user.name}</span>
                 </span>
-                <motion.button 
+                <motion.button
                   onClick={handleLogout}
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   whileTap={{ scale: 0.9 }}
@@ -156,7 +171,7 @@ const Navbar = () => {
 
           {!user && (
             <Link to="/login">
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.05, boxShadow: "0px 10px 15px -3px rgba(234, 179, 8, 0.3)" }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-yellow-500 text-white font-bold px-8 py-2.5 rounded-full shadow-lg transition-all"
@@ -210,7 +225,7 @@ const Navbar = () => {
               {user && (
                 <>
                   <div className="w-16 h-[1px] bg-gray-200 my-2"></div>
-                  
+
                   <motion.li whileHover={{ scale: 1.1 }}>
                     <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 hover:text-yellow-500">
                       <FaCartShopping /> Cart

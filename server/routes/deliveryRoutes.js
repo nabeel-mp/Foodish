@@ -15,13 +15,13 @@ const isDeliveryBoy = (req, res, next) => {
   }
 };
 
-// Apply the delivery boy check to all routes below
 router.use(isDeliveryBoy);
 
-// GET: Fetch the current active order for this delivery boy
+router.get('/assigned-orders', deliveryController.getAssignedOrders);
+// router.put('/update-status/:id', deliveryController.updateStatus);
+
 router.get('/my-order', deliveryController.getMyCurrentOrder);
 
-// PUT: Update the status of the assigned order (Shipped / Delivered)
 router.put('/order/:orderId/status', deliveryController.updateOrderStatus);
 
 module.exports = router;

@@ -32,6 +32,7 @@ import OrderManagement from "./assets/Admin/ordermanagment";
 import Payment from "./assets/pages/Payment";
 import DeliveryDashboard from "./assets/Delivery/DeliveryDashboard";
 import DeliveryBoysManagement from "./assets/Admin/DeliveryBoysManagement";
+import DeliveryTracking from "./assets/Delivery/DeliveryTracking";
 
 
 
@@ -60,7 +61,10 @@ const App = () => {
      </Route>
 
     {user?.role === 'delivery' && (
+      <>
       <Route path="/delivery" element={<DeliveryDashboard />} />
+      <Route path="/delivery-tracking" element={<DeliveryTracking />} />
+      </>
     )}
 
 
