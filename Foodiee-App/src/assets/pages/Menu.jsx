@@ -36,8 +36,9 @@ const Menu = () => {
       try {
         setLoading(true);
         const res = await api.get("/menuItems");
+        const availableOnly = (res.data || []).filter((item) => item.isAvailable !== false);
         // Remove duplicates based on title
-        const uniqueItems = res.data.filter(
+        const uniqueItems = availableOnly.filter(
           (item, index, self) =>
             index === self.findIndex((i) => i.title === item.title)
         );
@@ -160,7 +161,7 @@ const Menu = () => {
               {filteredItems.map((item) => {
                 const itemId = item._id || item.id;
                 const isWishlisted = wishlist.some((i) => (i._id || i.id) === itemId);
-                const isAvailable = item.available !== false; // Handle undefined as true
+                const isAvailable = item.isAvailable !== false;
 
                 return (
                   <motion.div

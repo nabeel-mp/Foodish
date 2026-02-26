@@ -22,7 +22,7 @@ const Payment = () => {
   // --- STRIPE PAYMENT HANDLER ---
   const handleStripePayment = async () => {
     setIsProcessing(true);
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken") || localStorage.getItem("token");
     try {
       const response = await api.post("/orders/place-stripe", orderData, {
         headers: {
@@ -54,7 +54,12 @@ const Payment = () => {
     try {
       // Standard order placement for COD
       const codOrderData = { ...orderData, paymentMethod: "COD" };
-      await api.post("/orders", codOrderData);
+      const token = localStorage.getItem("accessToken") || localStorage.getItem("token");
+      await api.post("/orders", codOrderData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       navigate("/thankyou", { state: { orderData: codOrderData }, replace: true });
     } catch (error) {
       console.error("COD error:", error);

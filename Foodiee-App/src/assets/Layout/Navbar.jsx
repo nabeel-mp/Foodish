@@ -7,7 +7,7 @@ import { RiAccountPinCircleFill } from "react-icons/ri";
 import { HiMenu, HiX } from "react-icons/hi";
 import { FaCartShopping, FaBasketShopping } from "react-icons/fa6";
 import { IoMdHeart } from "react-icons/io";
-import { FaRoute , FaTruck } from "react-icons/fa";
+import { FaRoute , FaTruck, FaClipboardList, FaMoneyBillWave } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, logout, cartItems, wishlist } = useContext(StoreContext);
@@ -93,6 +93,12 @@ const Navbar = () => {
               </Link>
               <Link to="/delivery-tracking" className={`flex items-center gap-2 ${isActive("/delivery-tracking") ? "text-yellow-500" : ""}`}>
                 <FaRoute /> Tracking
+              </Link>
+              <Link to="/delivery-history" className={`flex items-center gap-2 ${isActive("/delivery-history") ? "text-yellow-500" : ""}`}>
+                <FaClipboardList /> History
+              </Link>
+              <Link to="/delivery-salary" className={`flex items-center gap-2 ${isActive("/delivery-salary") ? "text-yellow-500" : ""}`}>
+                <FaMoneyBillWave /> Salary
               </Link>
             </>
           )}
@@ -210,7 +216,7 @@ const Navbar = () => {
             className="absolute top-full left-0 w-full bg-white/90 backdrop-blur-2xl shadow-2xl border-t border-gray-100 md:hidden"
           >
             <ul className="flex flex-col items-center py-8 space-y-6 font-semibold text-gray-800 text-lg">
-              {navLinks.map((link) => (
+              {!user || user.role !== "delivery" ? navLinks.map((link) => (
                 <motion.li key={link.path} whileHover={{ scale: 1.1 }}>
                   <Link
                     to={link.path}
@@ -220,9 +226,32 @@ const Navbar = () => {
                     {link.label}
                   </Link>
                 </motion.li>
-              ))}
+              )) : (
+                <>
+                  <motion.li whileHover={{ scale: 1.1 }}>
+                    <Link to="/delivery" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 hover:text-yellow-500">
+                      <FaTruck /> Dashboard
+                    </Link>
+                  </motion.li>
+                  <motion.li whileHover={{ scale: 1.1 }}>
+                    <Link to="/delivery-tracking" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 hover:text-yellow-500">
+                      <FaRoute /> Tracking
+                    </Link>
+                  </motion.li>
+                  <motion.li whileHover={{ scale: 1.1 }}>
+                    <Link to="/delivery-history" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 hover:text-yellow-500">
+                      <FaClipboardList /> History
+                    </Link>
+                  </motion.li>
+                  <motion.li whileHover={{ scale: 1.1 }}>
+                    <Link to="/delivery-salary" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 hover:text-yellow-500">
+                      <FaMoneyBillWave /> Salary
+                    </Link>
+                  </motion.li>
+                </>
+              )}
 
-              {user && (
+              {user && user.role !== "delivery" && (
                 <>
                   <div className="w-16 h-[1px] bg-gray-200 my-2"></div>
 
@@ -250,18 +279,21 @@ const Navbar = () => {
                     </Link>
                   </motion.li>
 
-                  <motion.li whileHover={{ scale: 1.05 }} className="pt-4">
-                    <button
-                      onClick={() => {
-                        setMenuOpen(false);
-                        handleLogout();
-                      }}
-                      className="text-red-500 border border-red-500 px-8 py-2 rounded-full hover:bg-red-500 hover:text-white transition-colors"
-                    >
-                      Logout
-                    </button>
-                  </motion.li>
                 </>
+              )}
+
+              {user && (
+                <motion.li whileHover={{ scale: 1.05 }} className="pt-4">
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="text-red-500 border border-red-500 px-8 py-2 rounded-full hover:bg-red-500 hover:text-white transition-colors"
+                  >
+                    Logout
+                  </button>
+                </motion.li>
               )}
 
               {!user && (

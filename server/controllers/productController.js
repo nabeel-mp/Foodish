@@ -1,9 +1,20 @@
 const Product = require('../models/Product');
 
+const parseBoolean = (value, defaultValue = true) => {
+  if (value === undefined || value === null || value === '') return defaultValue;
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') return value.toLowerCase() === 'true';
+  return Boolean(value);
+};
+
 // Get All Items
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const includeUnavailable = req.query.includeUnavailable === 'true';
+    const filter = includeUnavailable ? {} : {
+      $or: [{ isAvailable: true }, { isAvailable: { $exists: false } }]
+    };
+    const products = await Product.find(filter);
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -20,7 +31,7 @@ exports.getProductById = async (req, res) => {
 // Create Product (Admin)
 exports.createProduct = async (req, res) => {
   try {
-    const { title, category, price, desc, available } = req.body;
+    const { title, category, price, desc, isAvailable, available } = req.body;
 
     const imgUrl = req.file ? `http://localhost:3002/uploads/${req.file.filename}` : '';
     const newProduct = new Product({
@@ -28,7 +39,7 @@ exports.createProduct = async (req, res) => {
       category,
       price,
       desc,
-      available: available === 'true' || available === true, // Convert to boolean
+      isAvailable: parseBoolean(isAvailable ?? available, true),
       img: imgUrl
     });
     const savedProduct = await newProduct.save();
@@ -42,15 +53,16 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, category, price, desc, available } = req.body;
+    const { title, category, price, desc, isAvailable, available } = req.body;
 
-    const updateData = {
-      title,
-      category,
-      price,
-      desc,
-      available: available === 'true' || available === true
-    };
+    const updateData = {};
+    if (title !== undefined) updateData.title = title;
+    if (category !== undefined) updateData.category = category;
+    if (price !== undefined) updateData.price = price;
+    if (desc !== undefined) updateData.desc = desc;
+    if (isAvailable !== undefined || available !== undefined) {
+      updateData.isAvailable = parseBoolean(isAvailable ?? available, true);
+    }
 
     // If a new image was uploaded, update the image field
     if (req.file) {

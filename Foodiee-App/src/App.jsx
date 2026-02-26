@@ -30,9 +30,13 @@ import {Toaster} from "react-hot-toast"
 import UserDetails from "./assets/Admin/UserDetails";
 import OrderManagement from "./assets/Admin/ordermanagment";
 import Payment from "./assets/pages/Payment";
+import Verify from "./assets/pages/Verify";
 import DeliveryDashboard from "./assets/Delivery/DeliveryDashboard";
 import DeliveryBoysManagement from "./assets/Admin/DeliveryBoysManagement";
 import DeliveryTracking from "./assets/Delivery/DeliveryTracking";
+import DeliveryOrderHistory from "./assets/Delivery/DeliveryOrderHistory";
+import DeliverySalary from "./assets/Delivery/DeliverySalary";
+import AccountsControl from "./assets/Admin/AccountsControl";
 
 
 
@@ -58,12 +62,15 @@ const App = () => {
     <Route path="users" element={<Users/>}/>
     <Route path="orders" element={<OrderManagement/>}/>
     <Route path="delivery-boys" element={<DeliveryBoysManagement />} />
+    <Route path="accounts" element={<AccountsControl />} />
      </Route>
 
     {user?.role === 'delivery' && (
       <>
       <Route path="/delivery" element={<DeliveryDashboard />} />
       <Route path="/delivery-tracking" element={<DeliveryTracking />} />
+      <Route path="/delivery-history" element={<DeliveryOrderHistory />} />
+      <Route path="/delivery-salary" element={<DeliverySalary />} />
       </>
     )}
 
@@ -95,10 +102,16 @@ const App = () => {
             {isAdmin ? <Navigate to='/admin/dashboard'/> : <Order/>}
           </ProtectedRoute>
         } />
-         <Route path="/payment" J
+        <Route path="/payment"
         element={
           <ProtectedRoute>
             {isAdmin ? <Navigate to='/admin/dashboard'/> : <Payment/>}
+          </ProtectedRoute>
+        } />
+        <Route path="/verify"
+        element={
+          <ProtectedRoute>
+            {isAdmin ? <Navigate to='/admin/dashboard'/> : <Verify/>}
           </ProtectedRoute>
         } />
         <Route path="/myorders"

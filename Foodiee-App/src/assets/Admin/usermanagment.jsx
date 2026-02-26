@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaUser, FaEnvelope, FaShoppingBag, FaHeart, FaArrowLeft, FaMapMarkerAlt, FaCreditCard } from "react-icons/fa";
+import { 
+  FaUser, 
+  FaEnvelope, 
+  FaShoppingBag, 
+  FaHeart, 
+  FaArrowLeft, 
+  FaMapMarkerAlt, 
+  FaCreditCard 
+} from "react-icons/fa";
 import api from "../../api/axios";
 
 const UserDetails = () => {
@@ -20,20 +27,30 @@ const UserDetails = () => {
           api.get(`/admin/users/${userId}`),
           api.get(`/orders?userId=${userId}`)
         ]);
-        if (response.data.success) {
-          setUserData(response.data.data.user);
-          setOrders(response.data.data.orders);
-        }
 
-        // Calculate total items ordered
-        const count = ordersRes.data.reduce(
-          (total, order) =>
-            total + order.items.reduce((sum, item) => sum + item.quantity, 0),
-          0
-        );
-        setOrderedItemCount(count);
+        // Accessing data correctly from the axios response
+        const userData = userRes.data;
+        const ordersData = ordersRes.data;
+
+        // ROLE CHECK: Only allow 'user' role, reject 'delivery'
+        if (userData && userData.role === 'user') {
+          setUser(userData);
+          setOrders(ordersData);
+
+          // Calculate total items ordered
+          const count = ordersData.reduce(
+            (total, order) =>
+              total + order.items.reduce((sum, item) => sum + item.quantity, 0),
+            0
+          );
+          setOrderedItemCount(count);
+        } else {
+          // If role is delivery or something else, don't set user state
+          setUser(null);
+        }
       } catch (err) {
         console.error("Error fetching data:", err);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -49,15 +66,17 @@ const UserDetails = () => {
     );
   }
 
+  // This block will trigger if user doesn't exist OR if they were filtered out by role
   if (!user) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
-        <h2 className="text-2xl font-bold text-gray-800">User not found!</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Customer profile not found!</h2>
+        <p className="text-gray-500 mt-2">This ID may belong to a delivery partner or no longer exists.</p>
         <button
           onClick={() => navigate("/admin/users")}
-          className="mt-4 text-yellow-600 hover:underline"
+          className="mt-6 px-6 py-2 bg-yellow-500 text-white rounded-full font-bold hover:bg-yellow-600 transition-all"
         >
-          Go Back
+          Back to Customers
         </button>
       </div>
     );
@@ -72,7 +91,7 @@ const UserDetails = () => {
           onClick={() => navigate("/admin/users")}
           className="flex items-center gap-2 text-gray-500 hover:text-yellow-600 font-semibold mb-6 transition-colors"
         >
-          <FaArrowLeft /> Back to Users List
+          <FaArrowLeft /> Back to Customer List
         </button>
 
         {/* --- Profile Card --- */}
@@ -139,23 +158,26 @@ const UserDetails = () => {
 
         {orders.length === 0 ? (
           <div className="bg-white rounded-2xl p-10 text-center shadow-sm border border-gray-100">
-            <p className="text-gray-400 text-lg">No orders found for this user.</p>
+            <p className="text-gray-400 text-lg">No orders found for this customer.</p>
           </div>
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <div key={order.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+              <div key={order.id || order._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
 
                 {/* Order Header */}
                 <div className="bg-gray-50 px-6 py-4 flex flex-wrap justify-between items-center border-b border-gray-100 gap-3">
                   <div className="flex gap-4 items-center">
-                    <span className="font-bold text-gray-800">#{order.id}</span>
+                    <span className="font-bold text-gray-800">#{order.id || order._id}</span>
                     <span className="text-gray-400 text-sm">|</span>
-                    <span className="text-gray-500 text-sm">{order.date || "Unknown Date"}</span>
+                    <span className="text-gray-500 text-sm">
+                        {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "Recent Order"}
+                    </span>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                      order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
                       order.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
-                        'bg-blue-100 text-blue-700'
+                      'bg-blue-100 text-blue-700'
                     }`}>
                     {order.status || 'Processing'}
                   </span>
@@ -175,7 +197,7 @@ const UserDetails = () => {
                       <FaCreditCard className="text-gray-400 mt-1" />
                       <div>
                         <p className="text-xs text-gray-500 font-bold uppercase mb-1">Payment</p>
-                        <p className="text-gray-800 text-sm font-medium">{order.paymentMethod}</p>
+                        <p className="text-gray-800 text-sm font-medium">{order.paymentMethod || 'Cash on Delivery'}</p>
                       </div>
                     </div>
                   </div>
@@ -210,7 +232,6 @@ const UserDetails = () => {
   );
 };
 
-// Helper Component for Icon
 const FaUtensilsIcon = () => (
   <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 448 512" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
     <path d="M416 0C400 0 288 32 288 176V288c0 35.3 28.7 64 64 64h32V480c0 17.7 14.3 32 32 32s32-14.3 32-32V352 240 32c0-17.7-14.3-32-32-32zM64 16C64 7.8 57.9 1 49.7 1.5c-30 1.8-53 24.8-53 54.8V448c0 17.7 14.3 32 32 32s32-14.3 32-32V160h208c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H64z"></path>

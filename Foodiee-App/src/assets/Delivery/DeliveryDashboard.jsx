@@ -19,14 +19,9 @@ const DeliveryDashboard = () => {
   const fetchCurrentOrder = async () => {
     try {
       setLoading(true);
-      // Fetching from the updated backend controller endpoint
       const res = await api.get('/delivery/assigned-orders');
-      
-      // Since the driver becomes unavailable upon assignment, 
-      // they should logically only have 1 active order at a time.
-      const activeOrder = res.data?.orders && res.data.orders.length > 0 
-                          ? res.data.orders[0] 
-                          : null;
+      const orders = Array.isArray(res.data) ? res.data : (res.data?.orders || []);
+      const activeOrder = orders.length > 0 ? orders[0] : null;
                           
       setCurrentOrder(activeOrder);
     } catch (error) {
@@ -130,7 +125,7 @@ const DeliveryDashboard = () => {
                     <div>
                       <h4 className="text-xs font-black uppercase text-gray-400 tracking-widest mb-1">Customer Address</h4>
                       <p className="text-lg font-bold text-gray-800 leading-tight">
-                        {currentOrder.deliveryAddress?.street || currentOrder.userId?.address || "Address not provided"}
+                        {currentOrder.address || "Address not provided"}
                       </p>
                     </div>
                   </div>
@@ -145,7 +140,7 @@ const DeliveryDashboard = () => {
                     <div>
                       <h4 className="text-xs font-black uppercase text-gray-400 tracking-widest mb-1">Customer Name</h4>
                       <p className="text-lg font-bold text-gray-800">
-                        {currentOrder.userId?.name || "Customer"}
+                        {currentOrder.name || currentOrder.userId?.name || "Customer"}
                       </p>
                     </div>
                   </div>

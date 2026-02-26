@@ -21,6 +21,8 @@ router.get('/assigned-orders', deliveryController.getAssignedOrders);
 // router.put('/update-status/:id', deliveryController.updateStatus);
 
 router.get('/my-order', deliveryController.getMyCurrentOrder);
+router.get('/order-history', deliveryController.getOrderHistory);
+router.get('/salary-summary', deliveryController.getSalarySummary);
 
 router.put('/order/:orderId/status', deliveryController.updateOrderStatus);
 

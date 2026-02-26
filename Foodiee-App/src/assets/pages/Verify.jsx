@@ -9,18 +9,18 @@ const Verify = () => {
     const orderId = searchParams.get("orderId");
     
     const navigate = useNavigate();
-    const { token, clearCart } = useContext(StoreContext); // Make sure clearCart exists in your Context
+    const { token, clearCart } = useContext(StoreContext);
 
     const verifyPayment = async () => {
         try {
-            const response = await axios.post('/api/orders/verify', { success, orderId }, {
-                headers: { Authorization: `Bearer ${token}` }
+            const authToken = token || localStorage.getItem("accessToken") || localStorage.getItem("token");
+            const response = await axios.post('/orders/verify', { success, orderId }, {
+                headers: { Authorization: `Bearer ${authToken}` }
             });
             
             if (response.data.success) {
-                // Empty the cart and redirect to the user's orders page
                 if(clearCart) clearCart(); 
-                navigate("/myorders");
+                navigate("/thankyou", { state: { orderData: { id: orderId } }, replace: true });
             } else {
                 navigate("/");
             }

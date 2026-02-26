@@ -55,7 +55,7 @@ const ThankYou = () => {
           </motion.p>
 
           <div className="mt-12 space-y-4">
-            <Link to="/my-orders" className="block">
+            <Link to="/myorders" className="block">
               <button className="w-full bg-gray-900 text-white py-5 rounded-2xl font-bold flex items-center justify-center space-x-3 hover:bg-yellow-500 transition-all transform active:scale-95 shadow-lg">
                 <FaShoppingBag className="text-sm" />
                 <span>Track My Order</span>

@@ -16,8 +16,8 @@ const DeliveryTracking = () => {
         try {
             setLoading(true);
             const response = await api.get("/delivery/assigned-orders");
-            // Accessing the orders array correctly from your new backend structure
-            setActiveDeliveries(response.data.orders || []);
+            const orders = Array.isArray(response.data) ? response.data : (response.data?.orders || []);
+            setActiveDeliveries(orders);
         } catch (error) {
             toast.error("Failed to fetch assigned orders");
         } finally {
@@ -69,15 +69,14 @@ const DeliveryTracking = () => {
                                 </div>
 
                                 <h3 className="text-xl font-bold text-gray-800">
-                                    {order.deliveryAddress?.firstName || order.userId?.name} {order.deliveryAddress?.lastName || ""}
+                                    {order.name || order.userId?.name || "Customer"}
                                 </h3>
                                 <p className="text-gray-600 flex items-center gap-2 italic text-sm">
                                     <FaMapMarkerAlt className="text-red-500" />
-                                    {order.deliveryAddress?.street || order.userId?.address || "No Address provided"}
-                                    {order.deliveryAddress?.city ? `, ${order.deliveryAddress.city}` : ""}
+                                    {order.address || "No Address provided"}
                                 </p>
                                 <div className="text-sm text-gray-500 font-semibold mt-2">
-                                    Total: <span className="text-green-600">${order.totalAmount}</span>
+                                    Total: <span className="text-green-600">₹{Number(order.total || 0).toFixed(2)}</span>
                                 </div>
                             </div>
 
@@ -99,9 +98,7 @@ const DeliveryTracking = () => {
 
                                 <button
                                     onClick={() => {
-                                        const street = order.deliveryAddress?.street || order.userId?.address || "";
-                                        const city = order.deliveryAddress?.city || "";
-                                        const addressString = `${street} ${city}`.trim();
+                                        const addressString = (order.address || "").trim();
 
                                         if (addressString) {
                                             // Fixed the Google Maps link string

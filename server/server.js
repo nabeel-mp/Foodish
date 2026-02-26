@@ -35,14 +35,21 @@ app.get('/', (req, res) => {
 });
 
 // Error Handling (Basic)
+// app.use((err, req, res, next) => {
+//     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+//     res.status(statusCode);
+//     res.json({
+//         message: err.message,
+//         stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+//     });
+// });
 app.use((err, req, res, next) => {
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    res.status(statusCode);
-    res.json({
-        message: err.message,
-        stack: process.env.NODE_ENV === 'production' ? null : err.stack,
-    });
-});
+    // If headers are already sent, delegate to the default Express error handler
+    if (res.headersSent) {
+        return next(err);
+    }
+    res.status(500).json({ success: false, message: err.message });
+})
 
 const PORT = process.env.PORT || 3002;
 
