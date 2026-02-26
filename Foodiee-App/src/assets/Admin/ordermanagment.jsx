@@ -11,7 +11,9 @@ import {
   Printer,
   ReceiptText,
   X,
-  Scissors
+  Scissors,
+  Clock,
+  History as HistoryIcon
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -19,8 +21,8 @@ const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOrder, setSelectedOrder] = useState(null); // For Modal
-  const printRef = useRef();
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [activeTab, setActiveTab] = useState("available"); // New state for tabs
 
   useEffect(() => {
     fetchOrders();
@@ -51,7 +53,17 @@ const OrderManagement = () => {
     }
   };
 
-  const filteredOrders = orders.filter(order => 
+  // 1. Logic for filtering by Tab (Available vs History)
+  const tabFilteredOrders = orders.filter(order => {
+    if (activeTab === "available") {
+      return order.status === "Pending" || order.status === "Shipped";
+    } else {
+      return order.status === "Delivered" || order.status === "Cancelled";
+    }
+  });
+
+  // 2. Logic for filtering by Search Term
+  const filteredOrders = tabFilteredOrders.filter(order => 
     order.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order._id.includes(searchTerm) ||
     order.phone?.includes(searchTerm)
@@ -69,12 +81,12 @@ const OrderManagement = () => {
     <div className="p-6 md:p-10 bg-slate-50 min-h-screen">
       <div className={`max-w-7xl mx-auto print:hidden`}>
         
-        <header className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+        <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
           <div className="space-y-1">
             <h2 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
               Order <span className="text-orange-500">Manifest</span>
             </h2>
-            <p className="text-slate-500 font-medium italic">Overview of active and historical transactions.</p>
+            <p className="text-slate-500 font-medium italic">Manage live logistics and check historical data.</p>
           </div>
 
           <div className="relative group">
@@ -83,22 +95,54 @@ const OrderManagement = () => {
             </div>
             <input 
               type="text" 
-              placeholder="Search ID, Phone or Location..."
+              placeholder="Search ID, Phone or Customer..."
               className="pl-11 pr-6 py-3 w-full md:w-80 rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-orange-500 outline-none transition-all"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </header>
 
+        {/* --- TABS NAVIGATION --- */}
+        <div className="flex p-1.5 bg-slate-200/50 rounded-2xl w-fit mb-10 gap-1 border border-slate-200">
+          <button
+            onClick={() => setActiveTab("available")}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-black transition-all ${
+              activeTab === "available" 
+              ? "bg-white text-orange-600 shadow-sm" 
+              : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            <Clock size={16} />
+            AVAILABLE
+            <span className="ml-1 bg-slate-100 px-2 py-0.5 rounded-md text-[10px]">
+                {orders.filter(o => o.status === "Pending" || o.status === "Shipped").length}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab("history")}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-black transition-all ${
+              activeTab === "history" 
+              ? "bg-white text-slate-900 shadow-sm" 
+              : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            <HistoryIcon size={16} />
+            HISTORY
+            <span className="ml-1 bg-slate-100 px-2 py-0.5 rounded-md text-[10px]">
+                {orders.filter(o => o.status === "Delivered" || o.status === "Cancelled").length}
+            </span>
+          </button>
+        </div>
+
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {filteredOrders.map((order) => (
               <motion.div
                 key={order._id}
                 layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 className="bg-white rounded-3xl shadow-sm border border-slate-200 flex flex-col overflow-hidden group hover:border-orange-200 transition-all duration-300"
               >
                 <div className="p-5 border-b border-dashed border-slate-100 bg-slate-50/50">
@@ -163,93 +207,67 @@ const OrderManagement = () => {
                     className="w-full flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-orange-500 hover:text-orange-500 text-slate-700 font-black text-xs rounded-xl px-4 py-3 transition-all uppercase tracking-widest group/btn"
                   >
                     <Printer size={16} />
-                    Generate Thermal Receipt
+                    Generate Receipt
                   </button>
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {filteredOrders.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-40">
+            <div className="relative">
+              <ReceiptText size={100} className="text-slate-200 animate-pulse" />
+              <Search className="absolute -bottom-2 -right-2 text-orange-400 bg-white rounded-full p-2 shadow-lg" size={40} />
+            </div>
+            <h3 className="mt-6 text-xl font-black text-slate-800 uppercase tracking-widest">No Matches</h3>
+            <p className="text-slate-400 text-sm mt-2">No {activeTab} orders match your search.</p>
+          </div>
+        )}
       </div>
 
-      {/* --- THERMAL RECEIPT MODAL --- */}
+      {/* --- THERMAL RECEIPT MODAL remains unchanged --- */}
       <AnimatePresence>
         {selectedOrder && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            {/* Backdrop */}
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setSelectedOrder(null)}
               className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm print:hidden"
             />
-
-            {/* Receipt Container */}
             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               className="relative bg-white w-full max-w-[350px] rounded-b-xl shadow-2xl overflow-hidden print:shadow-none print:w-full print:max-w-none print:static print:m-0"
             >
-              {/* Modal Actions */}
               <div className="flex items-center justify-between p-4 bg-slate-100 border-b print:hidden">
                 <h3 className="text-xs font-black uppercase tracking-tighter text-slate-500">Thermal Preview</h3>
                 <div className="flex gap-2">
-                  <button 
-                    onClick={handlePrintAction}
-                    className="bg-orange-500 text-white p-2 rounded-lg hover:bg-orange-600 transition-colors"
-                    title="Print"
-                  >
+                  <button onClick={handlePrintAction} className="bg-orange-500 text-white p-2 rounded-lg hover:bg-orange-600 transition-colors">
                     <Printer size={16} />
                   </button>
-                  <button 
-                    onClick={() => setSelectedOrder(null)}
-                    className="bg-white text-slate-500 p-2 rounded-lg border border-slate-200 hover:bg-slate-50"
-                  >
+                  <button onClick={() => setSelectedOrder(null)} className="bg-white text-slate-500 p-2 rounded-lg border border-slate-200 hover:bg-slate-50">
                     <X size={16} />
                   </button>
                 </div>
               </div>
-
-              {/* The Actual Receipt Paper */}
               <div className="p-6 font-mono text-sm text-slate-800 bg-white" id="receipt-paper">
                 <div className="text-center mb-6">
-                  <h2 className="text-xl font-black uppercase tracking-tighter">Foodish Restuarent</h2>
+                  <h2 className="text-xl font-black uppercase tracking-tighter">Foodish Restaurant</h2>
                   <p className="text-[10px] text-slate-500">GSTIN: 27AAACF1234F1Z5</p>
                   <div className="mt-2 border-b border-dashed border-slate-300 w-full" />
                 </div>
-
                 <div className="space-y-1 mb-4 text-[11px]">
-                  <div className="flex justify-between">
-                    <span>DATE:</span>
-                    <span>{new Date().toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>ORDER ID:</span>
-                    <span>#{selectedOrder._id.slice(-8).toUpperCase()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>CUST:</span>
-                    <span className="truncate max-w-[150px] uppercase">{selectedOrder.name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>PHONE:</span>
-                    <span>{selectedOrder.phone}</span>
-                  </div>
+                  <div className="flex justify-between"><span>DATE:</span><span>{new Date().toLocaleDateString()}</span></div>
+                  <div className="flex justify-between"><span>ORDER ID:</span><span>#{selectedOrder._id.slice(-8).toUpperCase()}</span></div>
+                  <div className="flex justify-between"><span>CUST:</span><span className="truncate max-w-[150px] uppercase">{selectedOrder.name}</span></div>
+                  <div className="flex justify-between"><span>PHONE:</span><span>{selectedOrder.phone}</span></div>
                 </div>
-
                 <div className="border-b border-dashed border-slate-300 mb-4" />
-
-                {/* Items Table */}
                 <table className="w-full text-[11px] mb-4">
-                  <thead>
-                    <tr className="text-left">
-                      <th className="pb-2">ITEM</th>
-                      <th className="pb-2 text-center">QTY</th>
-                      <th className="pb-2 text-right">AMT</th>
-                    </tr>
-                  </thead>
+                  <thead><tr className="text-left"><th className="pb-2">ITEM</th><th className="pb-2 text-center">QTY</th><th className="pb-2 text-right">AMT</th></tr></thead>
                   <tbody>
                     {selectedOrder.items.map((item, idx) => (
                       <tr key={idx} className="border-b border-dotted border-slate-100">
@@ -260,29 +278,17 @@ const OrderManagement = () => {
                     ))}
                   </tbody>
                 </table>
-
                 <div className="space-y-1 text-right mb-6">
-                  <div className="flex justify-between text-[10px]">
-                    <span>SUBTOTAL:</span>
-                    <span>₹{selectedOrder.total}</span>
-                  </div>
-                  <div className="flex justify-between text-[10px]">
-                    <span>TAX (5%):</span>
-                    <span>₹0.00</span>
-                  </div>
+                  <div className="flex justify-between text-[10px]"><span>SUBTOTAL:</span><span>₹{selectedOrder.total}</span></div>
+                  <div className="flex justify-between text-[10px]"><span>TAX (5%):</span><span>₹0.00</span></div>
                   <div className="flex justify-between font-black text-lg pt-2 border-t border-dashed border-slate-300">
-                    <span>TOTAL:</span>
-                    <span>₹{selectedOrder.total?.toLocaleString()}</span>
+                    <span>TOTAL:</span><span>₹{selectedOrder.total?.toLocaleString()}</span>
                   </div>
                 </div>
-
                 <div className="text-center space-y-2">
-                  <p className="text-[10px] leading-tight text-slate-500 uppercase">
-                    Delivery To: {selectedOrder.address}
-                  </p>
+                  <p className="text-[10px] leading-tight text-slate-500 uppercase">Delivery To: {selectedOrder.address}</p>
                   <div className="flex justify-center py-2 opacity-20">
-                    <Scissors size={14} className="rotate-90" />
-                    <div className="border-t border-dashed border-slate-400 w-full mt-2 mx-2" />
+                    <Scissors size={14} className="rotate-90" /><div className="border-t border-dashed border-slate-400 w-full mt-2 mx-2" />
                   </div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em]">Thank You!</p>
                 </div>
@@ -292,18 +298,14 @@ const OrderManagement = () => {
         )}
       </AnimatePresence>
 
-      {/* --- GLOBAL PRINT OVERRIDE CSS --- */}
       <style>{`
         @media print {
           body * { visibility: hidden; }
           #receipt-paper, #receipt-paper * { visibility: visible; }
           #receipt-paper {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 80mm; /* Standard thermal paper width */
-            padding: 0;
-            margin: 0;
+            position: absolute; left: 0; top: 0;
+            width: 80mm;
+            padding: 0; margin: 0;
           }
           @page { size: auto; margin: 0mm; }
         }

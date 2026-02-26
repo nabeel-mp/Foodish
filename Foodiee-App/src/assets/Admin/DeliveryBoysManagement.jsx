@@ -7,13 +7,14 @@ import {
   Eye,
   Mail, 
   Phone, 
-  ShieldCheck, 
   CircleDollarSign, 
   Truck, 
   X,
-  Plus,
   Search,
-  UserCheck
+  UserCheck,
+  CalendarDays,
+  MapPin,
+  CreditCard
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -93,77 +94,80 @@ const DeliveryBoysManagement = () => {
   };
 
   return (
-    <div className="p-6 md:p-10 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-10 bg-[#F8FAFC] min-h-screen text-slate-800">
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+        <header className="flex flex-col lg:flex-row lg:items-center justify-between mb-10 gap-6">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-              Fleet <span className="text-orange-500">Personnel</span>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+              Delivery <span className="text-orange-500">Personnel</span>
             </h2>
-            <p className="text-slate-500 font-medium italic">Manage your delivery team and wage distributions.</p>
+            <p className="text-slate-500 font-medium italic text-sm">Manage your delivery team and wage distributions.</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative group flex-1 sm:flex-none">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={18} />
               <input 
                 type="text" 
-                placeholder="Search by name or phone..."
-                className="pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none w-full sm:w-64 transition-all shadow-sm"
+                placeholder="Search team..."
+                className="pl-11 pr-4 py-3.5 rounded-2xl bg-white border border-slate-200 focus:ring-2 focus:ring-orange-500 outline-none w-full sm:w-64 transition-all shadow-sm font-bold"
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-500 transition-colors shadow-lg shadow-slate-200"
+              className="flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-3.5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-600 transition-all shadow-xl active:scale-95"
             >
-              <UserPlus size={18} />
+              <UserPlus size={16} />
               Add Personnel
             </button>
           </div>
         </header>
 
         {/* Personnel Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence mode="popLayout">
             {filteredBoys.map((boy) => (
               <motion.div
                 key={boy._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white rounded-3xl border border-slate-200 p-6 hover:border-orange-200 transition-all shadow-sm group"
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white rounded-[2.5rem] border border-slate-200 p-6 hover:shadow-lg transition-all group relative"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="h-14 w-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-orange-50 group-hover:text-orange-500 transition-colors">
-                    <UserCheck size={28} />
+                  <div className="h-16 w-16 rounded-[1.5rem] bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 shadow-inner">
+                    <UserCheck size={32} />
                   </div>
-                  <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${boy.isAvailable ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                  <div className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border ${boy.isAvailable ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
                     {boy.isAvailable ? 'Available' : 'Busy'}
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-lg font-black text-slate-900">{boy.name}</h4>
-                    <div className="flex items-center gap-2 text-slate-500 text-sm mt-1">
-                      <Mail size={14} /> {boy.email}
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-500 text-sm">
-                      <Phone size={14} /> {boy.phone}
+                    <h4 className="text-xl font-black text-slate-900 tracking-tight">{boy.name}</h4>
+                    <div className="space-y-1 mt-2">
+                      <div className="flex items-center gap-2 text-slate-400 text-xs font-bold truncate">
+                        <Mail size={12} className="text-orange-400" /> {boy.email}
+                      </div>
+                      <div className="flex items-center gap-2 text-slate-400 text-xs font-bold">
+                        <Phone size={12} className="text-orange-400" /> {boy.phone}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 pt-4 border-t border-dashed border-slate-100">
-                    <div className="bg-slate-50 p-3 rounded-2xl">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase block">Deliveries</span>
-                      <span className="text-lg font-black text-slate-900">{boy.deliveredCount || 0}</span>
+                  <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-50">
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Deliveries</span>
+                      <span className="text-2xl font-black text-slate-900 leading-none">{boy.deliveredCount || 0}</span>
                     </div>
-                    <div className="bg-orange-50/50 p-3 rounded-2xl">
-                      <span className="text-[10px] font-bold text-orange-400 uppercase block">Wages</span>
-                      <span className="text-lg font-black text-orange-600">₹{boy.wages || 0}</span>
+                    <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100/50">
+                      <span className="text-[9px] font-black text-orange-400 uppercase tracking-widest block mb-1">Wages</span>
+                      <span className="text-2xl font-black text-orange-600 leading-none">₹{boy.wages || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -171,17 +175,15 @@ const DeliveryBoysManagement = () => {
                 <div className="grid grid-cols-2 gap-3 mt-6">
                   <button 
                     onClick={() => handleViewDetails(boy._id)}
-                    className="flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-slate-100 text-slate-500 hover:border-blue-100 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold text-xs uppercase tracking-widest"
+                    className="flex-1 py-3.5 rounded-2xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
                   >
-                    <Eye size={16} />
-                    Details
+                    <Eye size={14} /> Details
                   </button>
                   <button 
                     onClick={() => handleDelete(boy._id)}
-                    className="flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-slate-100 text-slate-400 hover:border-rose-100 hover:bg-rose-50 hover:text-rose-600 transition-all font-bold text-xs uppercase tracking-widest"
+                    className="flex-1 py-3.5 rounded-2xl bg-white border border-rose-100 text-rose-500 text-[10px] font-black uppercase tracking-widest hover:bg-rose-50 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
-                    <Trash2 size={16} />
-                    Terminate
+                    <Trash2 size={14} /> Remove
                   </button>
                 </div>
               </motion.div>
@@ -189,96 +191,99 @@ const DeliveryBoysManagement = () => {
           </AnimatePresence>
         </div>
 
-        {/* Details Modal */}
+        {/* Details Modal - Redesigned for Mobile (No Tables) */}
         <AnimatePresence>
           {isDetailsModalOpen && (
-            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+            <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="bg-white w-full max-w-5xl rounded-[2rem] shadow-2xl overflow-hidden"
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                className="bg-white w-full max-w-5xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
               >
-                <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+                <div className="p-6 md:p-8 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
                   <div>
-                    <h3 className="text-2xl font-black text-slate-900">Personnel Details</h3>
-                    <p className="text-sm text-slate-500 font-medium">Order and wage summary</p>
+                    <h3 className="text-2xl font-black text-slate-900">Performance Log</h3>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Personnel Activity Overview</p>
                   </div>
                   <button
                     onClick={() => { setIsDetailsModalOpen(false); setSelectedBoyDetails(null); }}
-                    className="p-2 bg-slate-100 rounded-full text-slate-500 hover:bg-orange-100 hover:text-orange-600 transition-colors"
+                    className="p-3 bg-slate-100 rounded-full text-slate-500 hover:bg-orange-100 hover:text-orange-600 transition-colors"
                   >
                     <X size={20} />
                   </button>
                 </div>
 
-                <div className="p-6 max-h-[75vh] overflow-y-auto">
+                <div className="p-6 md:p-8 overflow-y-auto space-y-8">
                   {detailsLoading ? (
-                    <div className="text-center py-16 text-slate-500 font-bold">Loading details...</div>
-                  ) : !selectedBoyDetails ? (
-                    <div className="text-center py-16 text-slate-500 font-bold">No details available.</div>
-                  ) : (
+                    <div className="flex flex-col items-center justify-center py-20">
+                       <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading Records...</p>
+                    </div>
+                  ) : selectedBoyDetails && (
                     <>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div className="bg-slate-50 p-4 rounded-2xl">
-                          <p className="text-xs font-bold text-slate-400 uppercase">Name</p>
-                          <p className="text-lg font-black text-slate-900">{selectedBoyDetails.deliveryBoy.name}</p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-2xl">
-                          <p className="text-xs font-bold text-slate-400 uppercase">Delivered</p>
-                          <p className="text-lg font-black text-slate-900">{selectedBoyDetails.deliveredCount}</p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-2xl">
-                          <p className="text-xs font-bold text-slate-400 uppercase">Active Orders</p>
-                          <p className="text-lg font-black text-slate-900">{selectedBoyDetails.activeCount}</p>
-                        </div>
-                        <div className="bg-orange-50 p-4 rounded-2xl">
-                          <p className="text-xs font-bold text-orange-400 uppercase">Total Wages</p>
-                          <p className="text-lg font-black text-orange-600">Rs. {selectedBoyDetails.totalWages}</p>
-                        </div>
+                      {/* Summary Grid */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <SummaryStat label="Personnel" val={selectedBoyDetails.deliveryBoy.name} />
+                        <SummaryStat label="Completed" val={selectedBoyDetails.deliveredCount} />
+                        <SummaryStat label="In Progress" val={selectedBoyDetails.activeCount} />
+                        <SummaryStat label="Total Wages" val={`₹${selectedBoyDetails.totalWages}`} highlight />
                       </div>
 
-                      <div className="bg-white border border-slate-200 rounded-2xl overflow-x-auto">
-                        <table className="w-full min-w-[900px] text-left">
-                          <thead className="bg-slate-50 border-b border-slate-100">
-                            <tr className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                              <th className="px-4 py-3">Order ID</th>
-                              <th className="px-4 py-3">Customer</th>
-                              <th className="px-4 py-3">Address</th>
-                              <th className="px-4 py-3">Amount</th>
-                              <th className="px-4 py-3">Payment</th>
-                              <th className="px-4 py-3">Status</th>
-                              <th className="px-4 py-3">Date</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {selectedBoyDetails.orders.map((order) => (
-                              <tr key={order._id} className="border-b border-slate-50">
-                                <td className="px-4 py-3 font-bold text-slate-800">#{order._id.slice(-8)}</td>
-                                <td className="px-4 py-3 text-slate-700">{order.name || order.userId?.name || 'Customer'}</td>
-                                <td className="px-4 py-3 text-slate-600">{order.address || 'N/A'}</td>
-                                <td className="px-4 py-3 font-bold text-slate-800">Rs. {Number(order.total || 0).toFixed(2)}</td>
-                                <td className="px-4 py-3 text-slate-700">{order.paymentMethod || 'N/A'}</td>
-                                <td className="px-4 py-3">
-                                  <span className={`px-2 py-1 rounded-full text-[10px] font-black uppercase ${
+                      {/* Orders Log - Responsive Cards instead of Table */}
+                      <div className="space-y-4">
+                        <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Order History</h4>
+                        {selectedBoyDetails.orders.map((order) => (
+                          <div key={order._id} className="bg-slate-50 rounded-3xl p-5 border border-slate-100 hover:border-orange-200 transition-all group">
+                            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                              <div className="flex items-center gap-4">
+                                <div className="p-3 bg-white rounded-2xl shadow-sm text-slate-400 group-hover:text-orange-500 transition-colors">
+                                  <Truck size={20} />
+                                </div>
+                                <div>
+                                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">ID: #{order._id.slice(-8).toUpperCase()}</span>
+                                  <h5 className="font-bold text-slate-900">{order.name || order.userId?.name || 'Walk-in Customer'}</h5>
+                                </div>
+                              </div>
+                              
+                              <div className="grid grid-cols-2 md:flex items-center gap-6">
+                                <div className="space-y-0.5">
+                                  <p className="text-[9px] font-black text-slate-400 uppercase">Status</p>
+                                  <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase ${
                                     order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-600' :
-                                    order.status === 'Shipped' ? 'bg-blue-50 text-blue-600' :
-                                    order.status === 'Assigned' ? 'bg-amber-50 text-amber-600' :
-                                    'bg-slate-100 text-slate-500'
+                                    order.status === 'Shipped' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'
                                   }`}>
                                     {order.status}
                                   </span>
-                                </td>
-                                <td className="px-4 py-3 text-slate-500 text-sm">{new Date(order.createdAt).toLocaleString()}</td>
-                              </tr>
-                            ))}
-                            {selectedBoyDetails.orders.length === 0 && (
-                              <tr>
-                                <td colSpan="7" className="px-4 py-8 text-center text-slate-400 font-semibold">No orders assigned yet.</td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </table>
+                                </div>
+                                <div className="space-y-0.5">
+                                  <p className="text-[9px] font-black text-slate-400 uppercase">Amount</p>
+                                  <p className="text-sm font-black text-slate-900">₹{order.total}</p>
+                                </div>
+                                <div className="space-y-0.5 hidden md:block">
+                                  <p className="text-[9px] font-black text-slate-400 uppercase">Date</p>
+                                  <p className="text-xs font-bold text-slate-600">{new Date(order.createdAt).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="mt-4 pt-4 border-t border-slate-200/50 flex flex-col md:flex-row md:items-center gap-4 text-xs">
+                              <div className="flex items-center gap-2 text-slate-500 flex-1">
+                                <MapPin size={14} className="text-orange-400 shrink-0" />
+                                <span className="font-medium line-clamp-1">{order.address || 'Standard Delivery'}</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-slate-500">
+                                <CreditCard size={14} className="text-orange-400" />
+                                <span className="font-bold uppercase tracking-widest text-[10px]">{order.paymentMethod || 'N/A'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {selectedBoyDetails.orders.length === 0 && (
+                          <div className="py-20 text-center border-2 border-dashed border-slate-100 rounded-3xl">
+                            <p className="text-slate-400 font-bold italic">No delivery activity on record.</p>
+                          </div>
+                        )}
                       </div>
                     </>
                   )}
@@ -288,10 +293,10 @@ const DeliveryBoysManagement = () => {
           )}
         </AnimatePresence>
 
-        {/* Modal Overlay */}
+        {/* CREATE PERSONNEL MODAL */}
         <AnimatePresence>
           {isModalOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -299,57 +304,29 @@ const DeliveryBoysManagement = () => {
                 className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden"
               >
                 <div className="p-8">
-                  <div className="flex justify-between items-center mb-8">
+                  <div className="flex justify-between items-center mb-8 text-center sm:text-left">
                     <div>
-                      <h3 className="text-2xl font-black text-slate-900">New Recruit</h3>
-                      <p className="text-slate-500 text-sm font-medium">Create delivery credentials</p>
+                      <h3 className="text-2xl font-black text-slate-900">Recruitment</h3>
+                      <p className="text-slate-500 text-sm font-medium italic">Create delivery credentials</p>
                     </div>
-                    <button onClick={() => setIsModalOpen(false)} className="p-2 bg-slate-100 rounded-full text-slate-500 hover:bg-orange-100 hover:text-orange-600 transition-colors">
+                    <button onClick={() => setIsModalOpen(false)} className="p-3 bg-slate-100 rounded-full text-slate-500 hover:bg-orange-100 hover:text-orange-600 transition-colors">
                       <X size={20} />
                     </button>
                   </div>
 
                   <form onSubmit={handleCreate} className="space-y-4">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Full Name</label>
-                      <input 
-                        type="text" name="name" placeholder="John Doe" 
-                        value={formData.name} onChange={handleInputChange} required 
-                        className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold text-slate-700"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Email</label>
-                      <input 
-                        type="email" name="email" placeholder="john@company.com" 
-                        value={formData.email} onChange={handleInputChange} required 
-                        className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold text-slate-700"
-                      />
-                    </div>
+                    <InputField label="Full Name" name="name" type="text" placeholder="John Doe" val={formData.name} change={handleInputChange} />
+                    <InputField label="Email Address" name="email" type="email" placeholder="john@studio.com" val={formData.email} change={handleInputChange} />
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Phone</label>
-                        <input 
-                          type="text" name="phone" placeholder="9876..." 
-                          value={formData.phone} onChange={handleInputChange} required 
-                          className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold text-slate-700"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Password</label>
-                        <input 
-                          type="password" name="password" placeholder="••••••" 
-                          value={formData.password} onChange={handleInputChange} required 
-                          className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold text-slate-700"
-                        />
-                      </div>
+                      <InputField label="Phone" name="phone" type="text" placeholder="9876..." val={formData.phone} change={handleInputChange} />
+                      <InputField label="Password" name="password" type="password" placeholder="••••••" val={formData.password} change={handleInputChange} />
                     </div>
                     
                     <button 
                       type="submit" 
-                      className="w-full bg-orange-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest mt-6 hover:bg-orange-600 shadow-lg shadow-orange-200 transition-all active:scale-[0.98]"
+                      className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs mt-6 hover:bg-orange-600 shadow-xl shadow-slate-200 transition-all active:scale-95"
                     >
-                      Confirm Recruitment
+                      Complete Recruitment
                     </button>
                   </form>
                 </div>
@@ -358,16 +335,35 @@ const DeliveryBoysManagement = () => {
           )}
         </AnimatePresence>
 
-        {/* Empty State */}
         {!loading && filteredBoys.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-40">
-            <Truck size={80} className="text-slate-200 animate-pulse mb-4" />
-            <h3 className="text-xl font-black text-slate-400 uppercase tracking-widest">No Personnel Found</h3>
+          <div className="flex flex-col items-center justify-center py-40 bg-white rounded-[3rem] border border-slate-100">
+            <Truck size={80} className="text-slate-100 mb-6" />
+            <h3 className="text-sm font-black text-slate-300 uppercase tracking-[0.4em]">Empty Personnel Roster</h3>
           </div>
         )}
       </div>
     </div>
   );
 };
+
+/* --- Helpers --- */
+
+const SummaryStat = ({ label, val, highlight }) => (
+  <div className={`${highlight ? 'bg-orange-500 text-white' : 'bg-slate-50 text-slate-900'} p-5 rounded-[1.8rem] border border-transparent`}>
+    <p className={`text-[9px] font-black uppercase tracking-widest mb-1 ${highlight ? 'text-orange-100' : 'text-slate-400'}`}>{label}</p>
+    <p className="text-lg font-black truncate">{val}</p>
+  </div>
+);
+
+const InputField = ({ label, name, type, placeholder, val, change }) => (
+  <div className="space-y-1.5">
+    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{label}</label>
+    <input 
+      type={type} name={name} placeholder={placeholder} 
+      value={val} onChange={change} required 
+      className="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none font-bold text-slate-800 shadow-inner"
+    />
+  </div>
+);
 
 export default DeliveryBoysManagement;
