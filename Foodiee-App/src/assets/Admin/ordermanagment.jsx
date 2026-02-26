@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -23,6 +23,7 @@ const OrderManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [activeTab, setActiveTab] = useState("available"); // New state for tabs
+  const [cancellingOrderId, setCancellingOrderId] = useState("");
 
   useEffect(() => {
     fetchOrders();
@@ -43,6 +44,26 @@ const OrderManagement = () => {
     window.print();
   };
 
+  const isCancellable = (status) => !['shipped', 'delivered', 'cancelled'].includes(String(status || '').toLowerCase());
+
+  const handleCancelOrder = async (orderId) => {
+    const confirmed = window.confirm("Cancel this order? This is allowed only before shipping.");
+    if (!confirmed) return;
+
+    try {
+      setCancellingOrderId(orderId);
+      await api.put(`/orders/${orderId}/cancel`);
+      setOrders((prev) =>
+        prev.map((order) => (order._id === orderId ? { ...order, status: "Cancelled" } : order))
+      );
+      toast.success("Order cancelled successfully");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to cancel order");
+    } finally {
+      setCancellingOrderId("");
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Delivered': return "text-emerald-600 bg-emerald-50 border-emerald-100";
@@ -56,7 +77,7 @@ const OrderManagement = () => {
   // 1. Logic for filtering by Tab (Available vs History)
   const tabFilteredOrders = orders.filter(order => {
     if (activeTab === "available") {
-      return order.status === "Pending" || order.status === "Shipped";
+      return order.status === "Pending" || order.status === "Assigned" || order.status === "Shipped";
     } else {
       return order.status === "Delivered" || order.status === "Cancelled";
     }
@@ -115,7 +136,7 @@ const OrderManagement = () => {
             <Clock size={16} />
             AVAILABLE
             <span className="ml-1 bg-slate-100 px-2 py-0.5 rounded-md text-[10px]">
-                {orders.filter(o => o.status === "Pending" || o.status === "Shipped").length}
+                {orders.filter(o => o.status === "Pending" || o.status === "Assigned" || o.status === "Shipped").length}
             </span>
           </button>
           <button
@@ -202,13 +223,24 @@ const OrderManagement = () => {
                 </div>
 
                 <div className="px-5 pb-5 bg-slate-50/80">
-                  <button 
-                    onClick={() => setSelectedOrder(order)}
-                    className="w-full flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-orange-500 hover:text-orange-500 text-slate-700 font-black text-xs rounded-xl px-4 py-3 transition-all uppercase tracking-widest group/btn"
-                  >
-                    <Printer size={16} />
-                    Generate Receipt
-                  </button>
+                  <div className="grid grid-cols-1 gap-2">
+                    <button 
+                      onClick={() => setSelectedOrder(order)}
+                      className="w-full flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-orange-500 hover:text-orange-500 text-slate-700 font-black text-xs rounded-xl px-4 py-3 transition-all uppercase tracking-widest group/btn"
+                    >
+                      <Printer size={16} />
+                      Generate Receipt
+                    </button>
+                    {isCancellable(order.status) && (
+                      <button
+                        onClick={() => handleCancelOrder(order._id)}
+                        disabled={cancellingOrderId === order._id}
+                        className="w-full flex items-center justify-center gap-2 bg-rose-50 border-2 border-rose-100 hover:bg-rose-100 text-rose-600 font-black text-xs rounded-xl px-4 py-3 transition-all uppercase tracking-widest disabled:opacity-50"
+                      >
+                        {cancellingOrderId === order._id ? "Cancelling..." : "Cancel Order"}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}

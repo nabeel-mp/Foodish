@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
 const User = require('../models/User');
+const { assignPendingOrdersToAvailableDeliveryBoys } = require('../services/deliveryAssignmentService');
 const WAGE_PER_DELIVERY = 25;
 
 exports.getAssignedOrders = async (req, res) => {
@@ -80,6 +81,7 @@ exports.updateOrderStatus = async (req, res) => {
     if (status === 'Delivered') {
       // Driver becomes available only after completing current delivery.
       await User.findByIdAndUpdate(deliveryBoyId, { isAvailable: true });
+      await assignPendingOrdersToAvailableDeliveryBoys();
     }
 
     res.status(200).json({ success: true, message: `Order marked as ${status}`, order });

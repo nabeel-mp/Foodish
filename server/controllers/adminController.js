@@ -3,6 +3,7 @@ const Product = require('../models/Product');
 const Order = require('../models/Order');
 const Expense = require('../models/Expense');
 const WagePayment = require('../models/WagePayment');
+const { assignPendingOrdersToAvailableDeliveryBoys } = require('../services/deliveryAssignmentService');
 const bcrypt = require('bcryptjs');
 const DELIVERY_WAGE_PER_ORDER = 25;
 
@@ -158,6 +159,7 @@ exports.createDeliveryBoy = async (req, res) => {
     });
 
     await deliveryBoy.save();
+    await assignPendingOrdersToAvailableDeliveryBoys();
 
     // Remove password from response
     deliveryBoy.password = undefined; 
@@ -194,6 +196,33 @@ exports.getDeliveryBoys = async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ message: "Error fetching delivery personnel", error: error.message });
+  }
+};
+
+exports.toggleDeliveryBoyPresence = async (req, res) => {
+  try {
+    const deliveryBoy = await User.findById(req.params.id);
+
+    if (!deliveryBoy || deliveryBoy.role !== 'delivery') {
+      return res.status(404).json({ success: false, message: "Delivery personnel not found" });
+    }
+
+    deliveryBoy.isPresent = !(deliveryBoy.isPresent ?? true);
+    await deliveryBoy.save();
+    if (deliveryBoy.isPresent) {
+      await assignPendingOrdersToAvailableDeliveryBoys();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Marked as ${deliveryBoy.isPresent ? 'Present' : 'Absent'}`,
+      data: {
+        _id: deliveryBoy._id,
+        isPresent: deliveryBoy.isPresent
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Error updating presence", error: error.message });
   }
 };
 

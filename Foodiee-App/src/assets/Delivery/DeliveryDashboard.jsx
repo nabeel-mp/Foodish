@@ -172,7 +172,7 @@ const DeliveryDashboard = () => {
 
               {/* Tips/Safety Card */}
               <div className="bg-yellow-50 rounded-3xl p-6 border border-yellow-100 flex items-center space-x-4">
-                <div className="text-yellow-600 text-2xl">⚡</div>
+                <div className="text-yellow-600 text-2xl"></div>
                 <p className="text-yellow-800 text-sm font-medium">
                   <strong>Pro-tip:</strong> Always verify the order items with the restaurant before leaving for delivery.
                 </p>

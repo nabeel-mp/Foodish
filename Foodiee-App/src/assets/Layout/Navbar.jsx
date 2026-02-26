@@ -46,6 +46,7 @@ const Navbar = () => {
   const userLinks = [
     { path: "/", label: "Home", icon: <FaHouse size={20} /> },
     { path: "/menu", label: "Menu", icon: <FaUtensils size={20} /> },
+    ...(user?.role === "user" ? [{ path: "/myorders", label: "My Orders", icon: <FaBasketShopping size={20} /> }] : []),
     { path: "/about", label: "About", icon: <FaCircleInfo size={20} /> },
     { path: "/contact", label: "Contact", icon: <IoMdContact size={22} /> },
   ];
@@ -120,6 +121,16 @@ const Navbar = () => {
                 </Link>
               </div>
             )}
+            {user && user.role !== "delivery" && (
+              <Link to="/cart" className="md:hidden relative text-gray-700 hover:text-yellow-500">
+                <FaCartShopping size={22} />
+                {cartItems?.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-yellow-500 text-[10px] text-white rounded-full h-4 w-4 flex items-center justify-center border border-white">
+                    {cartItems.length}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {user ? (
               <div className="flex items-center gap-2 border-l pl-4 border-gray-200">
@@ -172,20 +183,14 @@ const Navbar = () => {
           {/* Cart specifically for User mobile view */}
           {user && user.role !== "delivery" && (
             <Link
-              to="/cart"
-              className={`flex flex-col items-center gap-1 flex-1 ${isActive("/cart") ? "text-yellow-500" : "text-gray-400"}`}
+              to="/wishlist"
+              className={`flex flex-col items-center gap-1 flex-1 ${isActive("/wishlist") ? "text-red-500" : "text-gray-400"}`}
             >
-              <div className="relative">
-                <FaCartShopping size={20} />
-                {cartItems?.length > 0 && (
-                  <span className="absolute -top-1.5 -right-2 bg-yellow-500 text-[8px] text-white rounded-full h-3.5 w-3.5 flex items-center justify-center font-bold">
-                    {cartItems.length}
-                  </span>
-                )}
-              </div>
-              <span className="text-[9px] font-black uppercase tracking-tighter">Cart</span>
+              <IoMdHeart size={20} />
+              <span className="text-[9px] font-black uppercase tracking-tighter">Wishlist</span>
             </Link>
           )}
+
         </div>
       </nav>
       

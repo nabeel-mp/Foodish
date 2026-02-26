@@ -2,25 +2,7 @@ const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const Order = require('../models/Order');
 const User = require('../models/User');
-
-const assignAvailableDeliveryBoy = async (order) => {
-  const availableDeliveryBoy = await User.findOneAndUpdate(
-    {
-      role: 'delivery',
-      $or: [{ isAvailable: true }, { isAvailable: { $exists: false } }]
-    },
-    { isAvailable: false },
-    { new: true }
-  );
-
-  if (availableDeliveryBoy) {
-    order.deliveryBoy = availableDeliveryBoy._id;
-    order.status = 'Assigned';
-  } else {
-    order.deliveryBoy = null;
-    order.status = 'Pending';
-  }
-};
+const { assignAvailableDeliveryBoyToOrder, assignPendingOrdersToAvailableDeliveryBoys } = require('../services/deliveryAssignmentService');
 
 // Place Order
 exports.addOrderItems = async (req, res) => {
@@ -45,7 +27,7 @@ exports.addOrderItems = async (req, res) => {
       paymentStatus: paymentMethod === 'COD' ? false : true
     });
 
-    await assignAvailableDeliveryBoy(order);
+    await assignAvailableDeliveryBoyToOrder(order);
 
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
@@ -61,14 +43,61 @@ exports.updateOrderStatus = async (req, res) => {
     const order = await Order.findById(req.params.id);
 
     if (order) {
+      // Release delivery boy when admin marks order cancelled.
+      if (status === 'Cancelled' && order.deliveryBoy) {
+        await User.findByIdAndUpdate(order.deliveryBoy, { isAvailable: true });
+        order.deliveryBoy = null;
+      }
       order.status = status;
       const updatedOrder = await order.save();
+      if (status === 'Cancelled') {
+        await assignPendingOrdersToAvailableDeliveryBoys();
+      }
       res.json(updatedOrder);
     } else {
       res.status(404).json({ message: 'Order not found' });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Cancel order (user can cancel own order, admin can cancel any order)
+// Rule: allowed only before shipping.
+exports.cancelOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+
+    const isAdmin = req.user?.role === 'admin';
+    const isOwner = order.userId?.toString() === (req.user?.id || req.user?._id)?.toString();
+    if (!isAdmin && !isOwner) {
+      return res.status(403).json({ success: false, message: 'Not authorized to cancel this order' });
+    }
+
+    if (order.status === 'Delivered' || order.status === 'Cancelled' || order.status === 'Shipped') {
+      return res.status(400).json({
+        success: false,
+        message: 'Order cannot be cancelled after shipping'
+      });
+    }
+
+    if (order.deliveryBoy) {
+      await User.findByIdAndUpdate(order.deliveryBoy, { isAvailable: true });
+      order.deliveryBoy = null;
+    }
+
+    order.status = 'Cancelled';
+    const updatedOrder = await order.save();
+    await assignPendingOrdersToAvailableDeliveryBoys();
+
+    return res.status(200).json({ success: true, message: 'Order cancelled successfully', order: updatedOrder });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Failed to cancel order', error: error.message });
   }
 };
 
@@ -207,7 +236,7 @@ exports.verifyOrder = async (req, res) => {
 
       // Assign a delivery boy only after successful payment
       if (!order.deliveryBoy) {
-        await assignAvailableDeliveryBoy(order);
+        await assignAvailableDeliveryBoyToOrder(order);
       }
 
       await order.save();
@@ -216,6 +245,7 @@ exports.verifyOrder = async (req, res) => {
       // If somehow assigned before cancellation, release that delivery boy
       if (order.deliveryBoy) {
         await User.findByIdAndUpdate(order.deliveryBoy, { isAvailable: true });
+        await assignPendingOrdersToAvailableDeliveryBoys();
       }
       await Order.findByIdAndDelete(orderId);
       return res.json({ success: false, message: "Payment Failed or Cancelled" });
@@ -242,8 +272,7 @@ exports.addOrder = async (req, res) => {
       paymentStatus: false
     });
 
-    await assignAvailableDeliveryBoy(newOrder);
-
+    await assignAvailableDeliveryBoyToOrder(newOrder);
     await newOrder.save();
 
     res.status(201).json({ success: true, message: "Order placed successfully!", order: newOrder });
