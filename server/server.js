@@ -15,7 +15,7 @@ const app = express();
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(cors({
-    origin: "https://foodish-resto.vercel.app", // Allow your Vite Frontend
+    origin: "https://foodish-resto.vercel.app/", // Allow your Vite Frontend
     credentials: true
 }));
 
