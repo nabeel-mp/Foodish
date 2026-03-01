@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Ensure this matches your backend server port
-const BASE_URL = 'http://localhost:3002/api'; 
+const BASE_URL = 'https://foodish-backend-iovp.onrender.com/api'; 
 
 const api = axios.create({
   baseURL: BASE_URL,
