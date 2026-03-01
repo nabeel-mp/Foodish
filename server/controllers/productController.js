@@ -33,8 +33,7 @@ exports.createProduct = async (req, res) => {
   try {
     const { title, category, price, desc, isAvailable, available } = req.body;
 
-    const imgUrl = req.file ? `http://localhost:3002/uploads/${req.file.filename}` : '';
-    const newProduct = new Product({
+    const imgUrl = req.file ? `${process.env.BACKEND_URL || 'https://foodish-backend-iovp.onrender.com'}/uploads/${req.file.filename}` : ''; const newProduct = new Product({
       title,
       category,
       price,
