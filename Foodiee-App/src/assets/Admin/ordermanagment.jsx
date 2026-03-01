@@ -16,6 +16,7 @@ import {
   History as HistoryIcon
 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -47,7 +48,13 @@ const OrderManagement = () => {
   const isCancellable = (status) => !['shipped', 'delivered', 'cancelled'].includes(String(status || '').toLowerCase());
 
   const handleCancelOrder = async (orderId) => {
-    const confirmed = window.confirm("Cancel this order? This is allowed only before shipping.");
+    const confirmed = await showConfirmToast({
+      title: "Cancel this order?",
+      description: "Cancellation is allowed only before shipping.",
+      confirmText: "Cancel Order",
+      cancelText: "Keep Order",
+      variant: "warning",
+    });
     if (!confirmed) return;
 
     try {

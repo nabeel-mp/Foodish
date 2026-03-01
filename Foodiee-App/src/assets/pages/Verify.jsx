@@ -7,6 +7,7 @@ const Verify = () => {
     const [searchParams] = useSearchParams();
     const success = searchParams.get("success");
     const orderId = searchParams.get("orderId");
+    const sessionId = searchParams.get("session_id");
     
     const navigate = useNavigate();
     const { token, clearCart } = useContext(StoreContext);
@@ -14,7 +15,7 @@ const Verify = () => {
     const verifyPayment = async () => {
         try {
             const authToken = token || localStorage.getItem("accessToken") || localStorage.getItem("token");
-            const response = await axios.post('/orders/verify', { success, orderId }, {
+            const response = await axios.post('/orders/verify', { success, orderId, sessionId }, {
                 headers: { Authorization: `Bearer ${authToken}` }
             });
             

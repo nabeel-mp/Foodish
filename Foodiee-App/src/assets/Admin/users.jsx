@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { 
+import {
   FaUser, 
   FaTrash, 
   FaBan, 
@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../../api/axios";
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -51,7 +52,15 @@ const Users = () => {
   }, [search, users]);
 
   const handleDelete = useCallback(async (id) => {
-    if (!window.confirm("Delete this user account?")) return;
+    const confirmed = await showConfirmToast({
+      title: "Delete this user account?",
+      description: "This will permanently remove the user.",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+    });
+    if (!confirmed) return;
+
     try {
       await api.delete(`/admin/users/${id}`);
       setUsers((prev) => prev.filter((user) => (user.id || user._id) !== id));

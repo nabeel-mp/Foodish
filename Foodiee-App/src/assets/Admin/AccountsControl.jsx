@@ -13,6 +13,7 @@ import {
   FaChevronRight
 } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const CATEGORY_OPTIONS = [
   { value: "chef_salary", label: "Chef Salary" },
@@ -80,7 +81,15 @@ const AccountsControl = () => {
   };
 
   const handleDeleteExpense = async (id) => {
-    if (!window.confirm("Permanently delete this expense?")) return;
+    const confirmed = await showConfirmToast({
+      title: "Delete this expense?",
+      description: "This action is permanent and cannot be undone.",
+      confirmText: "Delete",
+      cancelText: "Keep",
+      variant: "danger",
+    });
+    if (!confirmed) return;
+
     try {
       await api.delete(`/admin/accounts/expenses/${id}`);
       toast.success("Expense removed");

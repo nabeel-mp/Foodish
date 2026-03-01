@@ -13,6 +13,7 @@ import {
 import { RiAccountPinCircleFill } from "react-icons/ri";
 import Logo from "./foodiee.jpeg";
 import { StoreContext } from "../storecontext/StoreContext";
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const AdminSidebar = () => {
   const navigate = useNavigate();
@@ -26,12 +27,20 @@ const AdminSidebar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout from Admin Panel?")) {
-      localStorage.removeItem("user");
-      setUser(null);
-      navigate("/login");
-    }
+  const handleLogout = async () => {
+    const confirmed = await showConfirmToast({
+      title: "Logout from Admin Panel?",
+      description: "Your current admin session will end.",
+      confirmText: "Logout",
+      cancelText: "Stay",
+      variant: "warning",
+    });
+
+    if (!confirmed) return;
+
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/login");
   };
 
   const isActive = (path) => location.pathname.includes(path);

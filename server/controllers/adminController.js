@@ -6,6 +6,17 @@ const WagePayment = require('../models/WagePayment');
 const { assignPendingOrdersToAvailableDeliveryBoys } = require('../services/deliveryAssignmentService');
 const bcrypt = require('bcryptjs');
 const DELIVERY_WAGE_PER_ORDER = 25;
+const revenueRecognitionMatch = {
+  status: { $ne: 'Cancelled' },
+  $or: [
+    { paymentMethod: 'Stripe', paymentStatus: true },
+    { paymentMethod: 'COD', status: 'Delivered' },
+    {
+      paymentMethod: { $nin: ['Stripe', 'COD'] },
+      paymentStatus: true
+    }
+  ]
+};
 
 exports.getDashboardStats = async (req, res) => {
   try {
@@ -14,6 +25,7 @@ exports.getDashboardStats = async (req, res) => {
     const totalOrders = await Order.countDocuments();
 
     const revenueData = await Order.aggregate([
+      { $match: revenueRecognitionMatch },
       { $group: { _id: null, totalRevenue: { $sum: "$total" } } }
     ]);
     const totalRevenue = revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
@@ -24,11 +36,7 @@ exports.getDashboardStats = async (req, res) => {
           createdAt: { 
             $gte: new Date(new Date().setMonth(new Date().getMonth() - 6)) 
           },
-          status: { $ne: 'Cancelled' },
-          $or: [
-            { paymentMethod: { $ne: 'Stripe' } },
-            { paymentStatus: true }
-          ]
+          ...revenueRecognitionMatch
         }
       },
       {
@@ -288,13 +296,7 @@ exports.getAccountsSummary = async (req, res) => {
   try {
     const revenueAgg = await Order.aggregate([
       {
-        $match: {
-          status: { $ne: 'Cancelled' },
-          $or: [
-            { paymentMethod: { $ne: 'Stripe' } },
-            { paymentStatus: true }
-          ]
-        }
+        $match: revenueRecognitionMatch
       },
       { $group: { _id: null, totalRevenue: { $sum: '$total' } } }
     ]);

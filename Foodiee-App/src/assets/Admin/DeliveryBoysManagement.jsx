@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   UserPlus, 
   Trash2, 
   Eye,
@@ -17,6 +17,7 @@ import {
   CreditCard
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const DeliveryBoysManagement = () => {
   const [deliveryBoys, setDeliveryBoys] = useState([]);
@@ -63,7 +64,15 @@ const DeliveryBoysManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to remove this personnel?')) return;
+    const confirmed = await showConfirmToast({
+      title: "Remove this personnel?",
+      description: "This account will be deleted permanently.",
+      confirmText: "Remove",
+      cancelText: "Cancel",
+      variant: "danger",
+    });
+    if (!confirmed) return;
+
     try {
       await api.delete(`/admin/delivery-boys/${id}`);
       toast.success('Account deleted');

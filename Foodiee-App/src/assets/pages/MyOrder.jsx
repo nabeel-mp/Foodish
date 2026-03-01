@@ -5,6 +5,7 @@ import { FaBoxOpen, FaTruck, FaCheckCircle, FaClock } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../../api/axios";
 import { toast } from "react-hot-toast";
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const MyOrder = () => {
   const { user, token } = useContext(StoreContext);
@@ -50,7 +51,13 @@ const MyOrder = () => {
   const isCancellable = (status) => !['shipped', 'delivered', 'cancelled'].includes(String(status || '').toLowerCase());
 
   const handleCancelOrder = async (orderId) => {
-    const confirmed = window.confirm("Cancel this order? This is allowed only before shipping.");
+    const confirmed = await showConfirmToast({
+      title: "Cancel this order?",
+      description: "Cancellation is allowed only before shipping.",
+      confirmText: "Cancel Order",
+      cancelText: "Keep Order",
+      variant: "warning",
+    });
     if (!confirmed) return;
 
     try {

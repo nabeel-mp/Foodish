@@ -16,6 +16,7 @@ const orderSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   paymentMethod: { type: String, default: 'UPI' },
   paymentStatus: { type: Boolean, default: false },
+  stripeSessionId: { type: String, default: null },
   status: { 
     type: String, 
     default: 'Pending', 

@@ -4,6 +4,13 @@ const Order = require('../models/Order');
 const User = require('../models/User');
 const { assignAvailableDeliveryBoyToOrder, assignPendingOrdersToAvailableDeliveryBoys } = require('../services/deliveryAssignmentService');
 
+const confirmedOrderFilter = {
+  $or: [
+    { paymentMethod: { $ne: 'Stripe' } },
+    { paymentStatus: true }
+  ]
+};
+
 // Place Order
 exports.addOrderItems = async (req, res) => {
 
@@ -103,13 +110,16 @@ exports.cancelOrder = async (req, res) => {
 
 // Get Logged In User Orders
 exports.getMyOrders = async (req, res) => {
-  const orders = await Order.find({ userId: req.user._id });
+  const orders = await Order.find({
+    userId: req.user._id,
+    ...confirmedOrderFilter
+  });
   res.json(orders);
 };
 
 // Get All Orders (Admin)
 exports.getAllOrders = async (req, res) => {
-  const orders = await Order.find({}).populate('userId', 'id name email');
+  const orders = await Order.find(confirmedOrderFilter).populate('userId', 'id name email');
   res.json(orders);
 };
 
@@ -206,9 +216,16 @@ exports.placeOrderStripe = async (req, res) => {
       payment_method_types: ['card'],
       line_items: line_items,
       mode: 'payment',
-      success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${newOrder._id}`,
-      cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${newOrder._id}`
+      success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${newOrder._id}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${newOrder._id}&session_id={CHECKOUT_SESSION_ID}`,
+      metadata: {
+        orderId: String(newOrder._id),
+        userId: String(finalUserId)
+      }
     });
+
+    newOrder.stripeSessionId = session.id;
+    await newOrder.save();
 
     // 4. Send the session URL back to the frontend
     return res.status(201).json({ success: true, session_url: session.url, orderId: newOrder._id });
@@ -220,7 +237,7 @@ exports.placeOrderStripe = async (req, res) => {
 
 // Verify payment status after Stripe redirects back
 exports.verifyOrder = async (req, res) => {
-  const { orderId, success } = req.body;
+  const { orderId, success, sessionId } = req.body;
   try {
     const order = await Order.findById(orderId);
     if (!order) {
@@ -232,6 +249,24 @@ exports.verifyOrder = async (req, res) => {
     }
 
     if (success === "true") {
+      if (!sessionId) {
+        return res.status(400).json({ success: false, message: "Missing Stripe session id" });
+      }
+
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      const isPaid = session?.payment_status === 'paid';
+      const orderMatchesSession = String(session?.metadata?.orderId || "") === String(orderId);
+      const knownSessionForOrder = !order.stripeSessionId || order.stripeSessionId === sessionId;
+
+      if (!isPaid || !orderMatchesSession || !knownSessionForOrder) {
+        return res.status(400).json({ success: false, message: "Payment not completed" });
+      }
+
+      // Idempotency: if this payment is already verified, do not re-assign/re-save.
+      if (order.paymentStatus) {
+        return res.json({ success: true, message: "Payment already verified" });
+      }
+
       order.paymentStatus = true;
 
       // Assign a delivery boy only after successful payment

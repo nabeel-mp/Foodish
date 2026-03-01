@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaStripeS, FaLock, FaMoneyBillWave } from "react-icons/fa";
 import api from "../../api/axios";
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const Payment = () => {
   const location = useLocation();
@@ -46,7 +47,13 @@ const Payment = () => {
 
   // --- CASH ON DELIVERY HANDLER (Optional) ---
   const handleCOD = async () => {
-    const confirmOrder = window.confirm("Are you sure you want to place this order using Cash on Delivery?");
+    const confirmOrder = await showConfirmToast({
+      title: "Place COD order?",
+      description: "Your order will be confirmed with Cash on Delivery.",
+      confirmText: "Place Order",
+      cancelText: "Not Now",
+      variant: "info",
+    });
     if (!confirmOrder) {
       return; 
     }

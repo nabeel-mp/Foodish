@@ -18,6 +18,7 @@ import {
   FaClipboardList, 
   FaMoneyBillWave 
 } from "react-icons/fa6"; // Standardized to fa6 for consistency
+import { showConfirmToast } from "../../utils/confirmToast";
 
 const Navbar = () => {
   const { user, logout, cartItems, wishlist } = useContext(StoreContext);
@@ -33,11 +34,19 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      logout();
-      navigate("/");
-    }
+  const handleLogout = async () => {
+    const confirmed = await showConfirmToast({
+      title: "Logout from account?",
+      description: "You can log in again anytime.",
+      confirmText: "Logout",
+      cancelText: "Stay",
+      variant: "warning",
+    });
+
+    if (!confirmed) return;
+
+    logout();
+    navigate("/");
   };
 
   const isActive = (path) => location.pathname === path;
